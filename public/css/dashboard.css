@@ -1,0 +1,170 @@
+/* ======== BASE GENERAL ======== */
+body.bg-app {
+  background-color: #eafef1;
+  font-family: "Poppins", sans-serif;
+  color: #111827;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+/* ======== CONTENEDOR GENERAL ======== */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ======== HEADER SUPERIOR ======== */
+.navbar-superior {
+  background-color: #fff;
+  padding: 0.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-superior-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navbar-superior .logo {
+  height: 42px;
+}
+
+.navbar-brand {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.navbar-superior small {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* ======== PERFIL USUARIO ======== */
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #111827;
+}
+
+.usuario img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #16a34a;
+}
+
+.usuario-nombre {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* ======== NAVBAR INFERIOR ======== */
+.navbar-inferior {
+  background-color: #fff;
+  padding: 0.6rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navbar-inferior-left {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.navbar-inferior .nav-link {
+  font-weight: 500;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.navbar-inferior .nav-link:hover {
+  color: #128c59;
+}
+
+/* ======== BOTÓN INICIO ======== */
+.btn-inicio {
+  background-color: #128c59;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  padding: 0.45rem 0.9rem;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(18, 140, 89, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.25s ease;
+}
+
+.btn-inicio:hover {
+  background-color: #0f754b;
+}
+
+/* ======== BOTÓN CERRAR SESIÓN ======== */
+.btn-cerrar {
+  background: none;
+  border: 2px solid #e74c3c;
+  color: #e74c3c;
+  font-weight: 600;
+  border-radius: 1rem;
+  padding: 0.45rem 1.1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-cerrar:hover {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+/* ======== CONTENIDO CENTRAL ======== */
+.dashboard-main {
+  flex: 1;
+  padding: 4rem 1rem;
+  background-color: #eafef1;
+}
+
+.dashboard-main .titulo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.dashboard-main .subtitulo {
+  font-size: 1.1rem;
+  color: #475569;
+  margin-top: 0.5rem;
+}
+
+/* ======== FOOTER ======== */
+.dashboard-footer {
+  font-size: 0.95rem;
+  color: #334155;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: #eafef1;
+  text-align: center;
+}
+
+.btn-cerrar {
+  text-decoration: none; /* quita el subrayado */
+  display: inline-flex;
+  align-items: center;
+}

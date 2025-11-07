@@ -1,0 +1,16 @@
+:root {
+  --brand-c1: #2285b6;
+  --brand-c2: #1b4478;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+.bg-app {
+  background: radial-gradient(1200px 600px at 10% 20%, rgba(255,255,255,.1) 0%, rgba(255,255,255,0) 60%),
+              radial-gradient(900px 500px at 90% 10%, rgba(255,255,255,.06) 0%, rgba(255,255,255,0) 60%),
+              linear-gradient(135deg, #e5fff0, #d4ffe6);
+}
