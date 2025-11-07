@@ -10,7 +10,7 @@ export const listarUsuarios = async (req, res) => {
 
   // filtros de búsqueda en nombre, usuario o correo
   const like = `%${q}%`;
-
+  // Codigo de consulta
   try {
     // total
     const [[{ total }]] = await pool.query(
