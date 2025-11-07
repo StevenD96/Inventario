@@ -50,7 +50,11 @@ export const listarUsuarios = async (req, res) => {
       totalPages,
       prevPage: Math.max(1, page - 1),
       nextPage: Math.min(totalPages, page + 1),
-      pages
+      pages,
+      nombreUsuario: req.session.usuario?.nombre_completo || "Usuario",
+      rolUsuario: req.session.usuario?.rol || "User"
+
+      
     });
   } catch (err) {
     console.error("Error listando usuarios:", err.message);

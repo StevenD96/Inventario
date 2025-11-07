@@ -2,9 +2,12 @@
   <div class="d-flex align-items-center justify-content-between mb-3">
     <h1 class="page-title">Usuarios</h1>
 
-    <a href="/usuarios/nuevo" class="btn btn-success btn-lg rounded-pill px-4">
-      <i class="bi bi-plus-lg me-2"></i>Nuevo usuario
-    </a>
+    <button class="btn btn-success btn-lg rounded-pill px-4"
+        data-bs-toggle="modal"
+        data-bs-target="#modalUsuario">
+  <i class="bi bi-plus-lg me-2"></i>Nuevo usuario
+</button>
+
   </div>
 
   <form class="mb-3" method="get" action="/usuarios">
@@ -34,10 +37,11 @@
               <td>{{this.correo}}</td>
               <td class="text-center">
                 {{#if (eq this.rol "Admin")}}
-                  <span class="chip chip-admin">Admin</span>
+                  <span class="chip chip-admin">{{rolTexto this.rol}}</span>
                 {{else}}
-                  <span class="chip chip-user">User</span>
+                  <span class="chip chip-user">{{rolTexto this.rol}}</span>
                 {{/if}}
+
               </td>
               <td class="text-end pe-3">
                 <a class="icon-btn" href="/usuarios/{{this.id_usuario}}/editar" title="Editar">
@@ -84,3 +88,8 @@
     {{/if}}
   </div>
 </section>
+
+{{> usuariosModal }}
+
+
+

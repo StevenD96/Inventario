@@ -1,0 +1,59 @@
+/* Modal principal */
+.usuarios-modal {
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  padding: 5px 20px 25px;
+}
+
+/* Encabezado */
+.icono-modal {
+  width: 40px;
+  height: 40px;
+  font-size: 1.4rem;
+}
+
+/* Inputs */
+.usuarios-form .input-group-text {
+  border-color: #dee2e6;
+  border-radius: 10px 0 0 10px;
+}
+
+.usuarios-form .form-control,
+.usuarios-form .form-select {
+  border-color: #dee2e6;
+  border-radius: 0 10px 10px 0;
+  padding-left: 8px;
+}
+
+.usuarios-form .form-control:focus,
+.usuarios-form .form-select:focus {
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+  border-color: #198754;
+}
+
+/* Nota */
+.alert-info {
+  border: 1px solid #d1e7dd;
+  background-color: #f8fdfb;
+  color: #0f5132;
+  font-size: 0.92rem;
+  border-radius: 10px;
+}
+
+/* Botones */
+.btn-outline-secondary {
+  border-radius: 8px;
+  padding: 8px 20px;
+}
+
+.btn-success {
+  border-radius: 8px;
+  padding: 8px 20px;
+  background-color: #00883c;
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #006f31;
+}

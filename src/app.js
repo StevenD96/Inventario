@@ -19,13 +19,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Handlebars con helpers
+// Handlebars con helpers personalizados
 app.engine(".hbs", engine({
   extname: ".hbs",
   helpers: {
     eq: (a, b) => a === b,
-    gt: (a, b) => a > b
+    gt: (a, b) => a > b,
+    rolTexto: (rol) => {
+      //if (rol === "Admin") return "Administrador";
+      //if (rol === "User") return "Usuario";
+      //return rol;
+      if (!rol) return "";
+      return rol === "Admin" ? "Administrador" : "Usuario"
+    }
   }
 }));
+
+
 app.set("view engine", ".hbs");
 app.set("views", path.join(__dirname, "views"));
 

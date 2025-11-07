@@ -6,10 +6,14 @@ import { cerrarSesion } from "../controllers/authController.js";
 const router = express.Router();
 
 router.get("/dashboard", verificarSesion, (req, res) => {
+  const usuario = req.session.usuario;
+
   res.render("dashboard", {
     layout: "app",
     title: "Panel Principal",
-    usuario: req.session.usuario
+    usuario, // enviamos el objeto completo
+    nombreUsuario: usuario?.nombre_completo,
+    rolUsuario: usuario?.rol
   });
 });
 
