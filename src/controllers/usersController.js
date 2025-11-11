@@ -111,14 +111,26 @@ export const crearUsuario = async (req, res) => {
       console.warn("Usuario creado, pero el correo no se pudo enviar.");
     }
 
-    // Redirigir al listado de usuarios
-    res.redirect("/usuarios");
+    //Redirigir al listado de usuarios
+    /*res.redirect("/usuarios");
   } catch (err) {
     console.error("Error creando usuario:", err.message);
     if (err.message.includes("Usuario o correo ya existe")) {
       res.status(400).send("El usuario o correo ya está registrado.");
     } else {
       res.status(500).send("Error al crear el usuario.");
+    }
+  }
+
+};*/
+ res.redirect("/usuarios?ok=1");
+  } catch (err) {
+    console.error("Error creando usuario:", err.message);
+
+    if (err.message.includes("Usuario o correo ya existe")) {
+      res.redirect("/usuarios?error=existe");
+    } else {
+      res.redirect("/usuarios?error=1");
     }
   }
 };
