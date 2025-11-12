@@ -53,11 +53,18 @@ app.use(session({
 // Archivos estáticos
 app.use(express.static(path.join(__dirname, "../public")));
 
-// Rutas
+/*Rutas
 app.use("/", authRoutes);
 app.use("/", dashboardRoutes);
 app.use("/usuarios", userRoutes);
+app.use("/bitacora", bitacoraRoutes);*/
+
+
+// Rutas
+app.use("/", dashboardRoutes);
+app.use("/usuarios", userRoutes);
 app.use("/bitacora", bitacoraRoutes);
+app.use("/", authRoutes); // ← auth siempre al final
 
 const PORT = process.env.PORT || 3010;
 app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));

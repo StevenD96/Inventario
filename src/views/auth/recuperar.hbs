@@ -1,0 +1,88 @@
+<div class="recover-container">
+  <div class="recover-card">
+    <img src="/media/logo.jpg" alt="CMD Cervantes" class="recover-logo">
+
+    <form action="/recuperar" method="POST" novalidate>
+      <label for="correo" class="form-label text-start w-100 fw-semibold">Ingrese su correo</label>
+
+      <div class="input-group mb-3">
+        <span class="input-group-text">
+          <i class="bi bi-envelope"></i>
+        </span>
+        <input type="email" id="correo" name="correo" class="form-control" required value="{{correo}}">
+      </div>
+
+      {{#if error}}
+        <div class="alert alert-danger">{{error}}</div>
+      {{/if}}
+
+      {{#if success}}
+        <div class="alert alert-success">{{success}}</div>
+      {{/if}}
+
+      <button type="submit" class="btn-validar">Validar</button>
+      <a href="/" class="btn-volver">
+        <i class="bi bi-arrow-left"></i> Volver al inicio
+      </a>
+    </form>
+  </div>
+
+  <footer class="recover-footer">
+    Desarrollado por CMD Cervantes - 2025
+  </footer>
+</div>
+
+{{#if showTokenModal}}
+  <div class="modal fade" id="modalToken" tabindex="-1" aria-labelledby="modalTokenLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-2">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTokenLabel">Verificar token</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <form action="/verificar-token" method="POST" novalidate>
+          <div class="modal-body">
+            <p class="mb-2">
+              Ingresa el código de 6 dígitos que te enviamos por correo. El código vence en 2 minutos.
+            </p>
+
+            <input type="hidden" name="correo" value="{{correo}}">
+
+            <div class="mb-3">
+              <input
+                type="text"
+                name="token"
+                maxlength="6"
+                class="form-control text-center fs-5"
+                placeholder="123456"
+                pattern="[0-9]{6}"
+                autocomplete="one-time-code"
+                required
+              >
+            </div>
+
+            {{#if tokenError}}
+              <div class="alert alert-danger">{{tokenError}}</div>
+            {{/if}}
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-success">Verificar token</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var el = document.getElementById('modalToken');
+      if (el) {
+        var modal = new bootstrap.Modal(el);
+        modal.show();
+      }
+    });
+  </script>
+{{/if}}

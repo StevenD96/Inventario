@@ -1,19 +1,20 @@
+/* public/css/recover.css */
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #e8f9ef;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
 }
 
-.forgot-container {
+.recover-container {
   text-align: center;
   width: 100%;
 }
 
-.forgot-card {
+.recover-card {
   background: #fff;
   border-radius: 20px;
   padding: 2.5rem 2.5rem 2rem 2.5rem;
@@ -22,27 +23,15 @@ body {
   margin: auto;
 }
 
-.forgot-logo {
+.recover-logo {
   width: 120px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 }
 
-.forgot-title {
-  font-size: 1.10rem;
-  font-weight: 600;
+.form-label {
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
   color: #101820;
-  margin-bottom: 0.5rem;
-}
-
-.forgot-subtitle {
-  font-size: 1.5rem;
-  color: #555;
-  margin-bottom: 1.8rem;
-}
-
-.input-group {
-  display: flex;
-  align-items: center;
 }
 
 .input-group-text {
@@ -105,7 +94,7 @@ body {
   color: #fff;
 }
 
-.forgot-footer {
+.recover-footer {
   margin-top: 1.5rem;
   font-size: 0.9rem;
   color: #444;
