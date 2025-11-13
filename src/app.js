@@ -11,6 +11,11 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import bitacoraRoutes from "./routes/bitacoraRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+import tuberiaRoutes from "./routes/tuberiaRoutes.js"; //Ruta para tuberias
+import { handlebarsHelpers } from "./utils/handlebarsHelpers.js";
+
+
+
 
 dotenv.config();
 const app = express();
@@ -20,7 +25,7 @@ const __dirname = path.dirname(__filename);
 
 // Handlebars con helpers
 // Handlebars con helpers personalizados
-app.engine(".hbs", engine({
+/*app.engine(".hbs", engine({
   extname: ".hbs",
   helpers: {
     eq: (a, b) => a === b,
@@ -31,6 +36,18 @@ app.engine(".hbs", engine({
       //return rol;
       if (!rol) return "";
       return rol === "Admin" ? "Administrador" : "Usuario"
+    }
+  }
+}));*/
+app.engine(".hbs", engine({
+  extname: ".hbs",
+  helpers: {
+    ...handlebarsHelpers,     // ← importa tus helpers personalizados
+    eq: (a, b) => a === b,    // ← si quieres mantener estos también
+    gt: (a, b) => a > b,
+    rolTexto: (rol) => {
+      if (!rol) return "";
+      return rol === "Admin" ? "Administrador" : "Usuario";
     }
   }
 }));
@@ -64,6 +81,7 @@ app.use("/bitacora", bitacoraRoutes);*/
 app.use("/", dashboardRoutes);
 app.use("/usuarios", userRoutes);
 app.use("/bitacora", bitacoraRoutes);
+app.use("/tuberia", tuberiaRoutes); //tuberias
 app.use("/", authRoutes); // ← auth siempre al final
 
 const PORT = process.env.PORT || 3010;
