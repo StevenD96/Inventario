@@ -1,7 +1,7 @@
 <section class="container-fluid users-wrapper">
 
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <h1 class="page-title">Tubería</h1>
+    <h1 class="page-title">Tuberia</h1>
 
     <button class="btn btn-success btn-lg rounded-pill px-4"
         data-bs-toggle="modal"
@@ -34,7 +34,7 @@
         type="text" 
         name="q" 
         value="{{q}}" 
-        placeholder="Buscar por descripción o categoría..."
+        placeholder="Buscar por descripción o diámetro..."
       />
     </div>
   </form>
@@ -47,7 +47,6 @@
           <th>Descripción</th>
           <th>Diámetro</th>
           <th>Especificación</th>
-          <th>Categoría</th>
           <th>Cantidad</th>
           <th class="text-end">Acciones</th>
         </tr>
@@ -60,7 +59,6 @@
               <td>{{descripcion}}</td>
               <td>{{diametro}}</td>
               <td>{{especificacion}}</td>
-              <td>{{categoria}}</td>
               <td>{{cantidad}}</td>
 
               <td class="text-end pe-3">
@@ -112,5 +110,7 @@
   </div>
 
 </section>
+
+{{> tuberiaModal }}
 
 

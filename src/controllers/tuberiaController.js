@@ -4,7 +4,7 @@ const PAGE_SIZE = 10;
 
 export const listarTuberia = async (req, res) => {
   try {
-    const usuarioSesion = req.session.usuario;  // 🔥 MOVERLO ARRIBA
+    const usuarioSesion = req.session.usuario; 
     if (!usuarioSesion) return res.redirect("/");
 
     const page = Math.max(parseInt(req.query.page || "1"), 1);
@@ -18,8 +18,10 @@ export const listarTuberia = async (req, res) => {
       offset,
     ]);
 
-    const tuberias = result[0];
-    const total = result[1][0]?.total || 0;
+    //const tuberias = result[0];
+    //const total = result[1][0]?.total || 0;
+    const total = result[0][0].total;
+    const tuberias = result[1];
 
     res.render("Tuberia/index", {
       layout: "app",
@@ -55,14 +57,12 @@ export const listarTuberia = async (req, res) => {
 // =========================
 export const crearTuberia = async (req, res) => {
   try {
-    const { nombre, descripcion, diametro, especificacion, categoria, cantidad } = req.body;
+    const {descripcion, diametro, especificacion, cantidad } = req.body;
 
-    await pool.query("CALL sp_tuberia_insertar(?,?,?,?,?,?)", [
-      nombre,
+    await pool.query("CALL sp_tuberia_insertar(?,?,?,?)", [
       descripcion,
       diametro,
       especificacion,
-      categoria,
       cantidad
     ]);
 
@@ -79,15 +79,13 @@ export const crearTuberia = async (req, res) => {
 export const editarTuberia = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, descripcion, diametro, especificacion, categoria, cantidad } = req.body;
+    const {descripcion, diametro, especificacion, cantidad } = req.body;
 
-    await pool.query("CALL sp_tuberia_actualizar(?,?,?,?,?,?,?)", [
+    await pool.query("CALL sp_tuberia_actualizar(?,?,?,?,?)", [
       id,
-      nombre,
       descripcion,
       diametro,
       especificacion,
-      categoria,
       cantidad
     ]);
 

@@ -1,78 +1,99 @@
+<!-- Modal Agregar Material -->
 <div class="modal fade" id="modalTuberia" tabindex="-1" aria-labelledby="modalTuberiaLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content shadow-lg">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content usuarios-modal">
 
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modalTuberiaLabel">Nuevo material</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-
-      <form action="/tuberia/crear" method="POST">
-        <div class="modal-body">
-
-          <div class="row g-3">
-
-            <div class="col-md-6">
-              <label class="form-label fw-bold">Descripción</label>
-              <input 
-                type="text" 
-                name="descripcion" 
-                class="form-control" 
-                required
-              >
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label fw-bold">Diámetro</label>
-              <input 
-                type="text" 
-                name="diametro" 
-                class="form-control" 
-                required
-              >
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label fw-bold">Especificación</label>
-              <input 
-                type="text" 
-                name="especificacion" 
-                class="form-control" 
-                required
-              >
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label fw-bold">Categoría</label>
-              <select name="categoria" class="form-select" required>
-                <option value="">Seleccione...</option>
-                <option value="Agua">Agua</option>
-                <option value="Sanitaria">Sanitaria</option>
-                <option value="Otros">Otros</option>
-              </select>
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label fw-bold">Cantidad</label>
-              <input 
-                type="number" 
-                name="cantidad" 
-                class="form-control" 
-                min="0" 
-                required
-              >
-            </div>
-
+      <!-- Encabezado -->
+      <div class="modal-header border-0">
+        <div class="d-flex align-items-center gap-2">
+          <div class="icono-modal bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-tools fs-4"></i>
           </div>
 
+          <h5 class="modal-title fw-semibold" id="modalTuberiaLabel">Agregar Nuevo Material</h5>
         </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Guardar</button>
-        </div>
+      <!-- Cuerpo -->
+      <div class="modal-body">
+        <form action="/tuberia/crear" method="POST" id="formNuevoMaterial" class="usuarios-form">
 
-      </form>
+          <!-- Descripción -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Descripción <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-card-text"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control border-start-0" 
+                name="descripcion" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Diámetro -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Diámetro <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-circle"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control border-start-0" 
+                name="diametro" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Especificación -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Especificación <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-tag"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control border-start-0" 
+                name="especificacion" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Cantidad -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Cantidad <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-123"></i>
+              </span>
+              <input 
+                type="number" 
+                class="form-control border-start-0" 
+                name="cantidad"
+                min="0"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Botones -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-check-circle me-1"></i> Agregar Material
+            </button>
+
+          </div>
+        </form>
+      </div>
 
     </div>
   </div>
