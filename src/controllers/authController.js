@@ -84,7 +84,7 @@ export const procesarLogin = async (req, res) => {
     if (resultado.rol === "Admin") {
       return res.redirect("/dashboard");
     } else {
-      return res.redirect("/consulta");
+      return res.redirect("/dashboard");
     }
   } catch (error) {
     console.error("Error en login:", error.message);
