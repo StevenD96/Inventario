@@ -17,11 +17,25 @@
 
       <div class="mb-2">
         <label class="form-label">Contraseña</label>
-        <div class="input-group">
+        <div class="input-group position-relative">
           <span class="input-group-text"><i class="bi bi-lock"></i></span>
-          <input type="password" name="contrasena" class="form-control" placeholder="Ingresa tu contraseña" required>
-        </div>
+
+          <input id="passwordInput"
+                  type="password"
+                  name="contrasena"
+                  class="form-control"
+                  placeholder="Ingresa tu contraseña"
+                  required>
+
+          <!-- Ojo (mostrar/ocultar contraseña) -->
+          <span class="position-absolute top-50 end-0 translate-middle-y me-3" 
+                style="cursor:pointer;"
+                onclick="togglePassword()">
+            <i id="toggleIcon" class="bi bi-eye-slash"></i>
+          </span>
       </div>
+    </div>
+
 
       <div class="text-end mb-3">
         <a href="/recuperar" class="text-success fw-semibold">Recuperar contraseña</a>
@@ -38,3 +52,20 @@
     <p class="text-center text-muted small mt-3 mb-0">Desarrollado por CMD Cervantes - 2025</p>
   </div>
 </div>
+<!-- Script para mostrar/ocultar contraseña -->
+<script>
+function togglePassword() {
+    const input = document.getElementById("passwordInput");
+    const icon = document.getElementById("toggleIcon");
+
+    if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+    } else {
+        input.type = "password";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+    }
+}
+</script>
