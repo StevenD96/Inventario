@@ -84,13 +84,16 @@ export const crearUsuario = async (req, res) => {
 
     // Registrar en bitácora (si existe id válido)
     if (id_usuario) {
+      const id_admin = req.session.usuario.id_usuario; // usuario que realiza la acción
+
       await pool.query("CALL sp_registrar_bitacora(?, ?, ?, ?)", [
-        id_usuario,
+        id_admin,
         "Usuarios",
         "CREAR",
         `Se creó el usuario ${nombre_usuario}`
       ]);
     }
+
 
     // Enviar correo con contraseña temporal
     const correoEnviado = await enviarCorreo({

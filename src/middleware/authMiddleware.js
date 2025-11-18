@@ -4,3 +4,4 @@ export function verificarSesion(req, res, next) {
   }
   return res.redirect("/");
 }
+

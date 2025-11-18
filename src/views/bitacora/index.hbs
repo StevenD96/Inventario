@@ -1,71 +1,94 @@
 <section class="container-fluid users-wrapper">
 
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <h1 class="page-title">Bitácora</h1>
-
-    {{!-- Botones de exportación --}}
-    <div class="d-flex gap-2">
-      <button class="btn btn-success btn-lg rounded-pill px-4">
-        <i class="bi bi-file-earmark-excel me-2"></i>Exportar Excel
-      </button>
-
-      <button class="btn btn-danger btn-lg rounded-pill px-4">
-        <i class="bi bi-file-earmark-pdf me-2"></i>Exportar PDF
-      </button>
-    </div>
+    <h1 class="page-title">Bitácora del Sistema</h1>
   </div>
 
-  {{!-- Filtros --}}
-  <form class="users-card p-3 mb-4" method="get" action="/bitacora">
-    <h5 class="mb-3"><i class="bi bi-search me-2"></i>Filtros</h5>
+  {{!-- TARJETA DE FILTROS --}}
+  <form method="get" action="/bitacora" class="mb-3">
+    <div class="users-card p-3">
+      <h5 class="mb-3">
+        <i class="bi bi-funnel me-2"></i>Filtros
+      </h5>
 
-    <div class="row g-3">
+      <div class="row g-3">
+        {{!-- Mes --}}
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-calendar3 me-1"></i>Mes
+          </label>
+          <select name="mes" class="form-select">
+            {{#each meses}}
+              <option value="{{value}}" {{#if (eq ../filtros.mes value)}}selected{{/if}}>
+                {{name}}
+              </option>
+            {{/each}}
+          </select>
+        </div>
 
-      <div class="col-md-3">
-        <label class="form-label fw-semibold"><i class="bi bi-calendar3 me-2"></i>Mes</label>
-        <select name="mes" class="form-select">
-          {{{opcionesMes mes}}}
-        </select>
+        {{!-- Año --}}
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-calendar-event me-1"></i>Año
+          </label>
+          <select name="anio" class="form-select">
+            {{#each anios}}
+              <option value="{{value}}" {{#if (eq ../filtros.anio value)}}selected{{/if}}>
+                {{value}}
+              </option>
+            {{/each}}
+          </select>
+        </div>
+
+        {{!-- Usuario --}}
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-person-circle me-1"></i>Usuario
+          </label>
+          <select name="usuario" class="form-select">
+            <option value="0" {{#if (eq filtros.usuario 0)}}selected{{/if}}>Todos</option>
+            {{#each usuarios}}
+              <option value="{{id_usuario}}" {{#if (eq ../filtros.usuario id_usuario)}}selected{{/if}}>
+                {{nombre_usuario}}
+              </option>
+            {{/each}}
+          </select>
+        </div>
+
+        {{!-- Módulo --}}
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-app-indicator me-1"></i>Módulo
+          </label>
+          <select name="modulo" class="form-select">
+            {{#each modulos}}
+              <option value="{{value}}" {{#if (eq ../filtros.modulo value)}}selected{{/if}}>
+                {{name}}
+              </option>
+            {{/each}}
+          </select>
+        </div>
       </div>
 
-      <div class="col-md-3">
-        <label class="form-label fw-semibold"><i class="bi bi-calendar-event me-2"></i>Año</label>
-        <select name="anio" class="form-select">
-          {{{opcionesAnio anio}}}
-        </select>
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label fw-semibold"><i class="bi bi-person me-2"></i>Usuario</label>
-        <select name="usuario" class="form-select">
-          <option value="Todos">Todos</option>
-          {{#each usuarios}}
-            <option value="{{this.nombre_usuario}}">{{this.nombre_usuario}}</option>
-          {{/each}}
-        </select>
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label fw-semibold"><i class="bi bi-grid me-2"></i>Módulo</label>
-        <select name="modulo" class="form-select">
-          <option value="Todos">Todos</option>
-          <option value="Login">Login</option>
-          <option value="Usuarios">Usuarios</option>
-          <option value="Tubería">Tubería</option>
-          <option value="Inventario">Inventario</option>
-        </select>
+      <div class="d-flex justify-content-end mt-3">
+        <button type="submit" class="btn btn-success rounded-pill px-4">
+          <i class="bi bi-search me-2"></i>Buscar
+        </button>
       </div>
     </div>
-
-    <div class="mt-4 text-end">
-      <button class="btn btn-success btn-lg rounded-pill px-4">
-        <i class="bi bi-search me-2"></i>Buscar
-      </button>
-    </div>
-
   </form>
 
-  {{!-- Tabla --}}
+  {{!-- BOTONES EXPORTAR (SIN LÓGICA AÚN) --}}
+  <div class="d-flex gap-2 mb-3">
+    <button type="button" class="btn btn-success rounded-pill px-4">
+      <i class="bi bi-file-earmark-excel me-2"></i>Exportar Excel
+    </button>
+    <button type="button" class="btn btn-danger rounded-pill px-4">
+      <i class="bi bi-file-earmark-pdf me-2"></i>Exportar PDF
+    </button>
+  </div>
+
+  {{!-- TABLA --}}
   <div class="table-responsive users-card">
     <table class="table align-middle mb-0">
       <thead>
@@ -77,29 +100,30 @@
           <th>Descripción</th>
         </tr>
       </thead>
-
       <tbody>
-        {{#if bitacora.length}}
-          {{#each bitacora}}
+        {{#if registros.length}}
+          {{#each registros}}
             <tr>
-              <td>{{this.fecha_hora}}</td>
-              <td>{{this.usuario}}</td>
-              <td>{{this.modulo}}</td>
-
+              <td>{{fecha}}</td>
+              <td>{{usuario}}</td>
+              <td>{{modulo}}</td>
               <td>
-                {{#if (eq this.accion "CREAR")}}
+                {{!-- Chips de acción parecidos a usuarios --}}
+                {{#if (eq accion "CREAR")}}
                   <span class="chip chip-user">Crear</span>
-                {{else if (eq this.accion "MODIFICAR")}}
+                {{else if (eq accion "EDITAR")}}
                   <span class="chip chip-admin">Modificar</span>
+                {{else if (eq accion "ELIMINAR")}}
+                  <span class="chip chip-admin">Eliminar</span>
+                {{else if (eq accion "CONSULTAR")}}
+                  <span class="chip chip-user">Consultar</span>
                 {{else}}
-                  <span class="chip chip-user">Eliminar</span>
+                  <span class="chip chip-admin">Error</span>
                 {{/if}}
               </td>
-
-              <td>{{this.descripcion}}</td>
+              <td>{{descripcion}}</td>
             </tr>
           {{/each}}
-
         {{else}}
           <tr>
             <td colspan="5" class="text-center text-muted py-4">
@@ -111,7 +135,7 @@
     </table>
   </div>
 
-  {{!-- Paginación --}}
+  {{!-- PAGINACIÓN --}}
   <div class="d-flex align-items-center justify-content-between mt-3">
     <div class="text-muted">
       Mostrando {{mostrando}} de {{total}} registros
@@ -121,17 +145,26 @@
       <nav>
         <ul class="pagination mb-0">
           <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
-            <a class="page-link" href="/bitacora?page={{prevPage}}">Anterior</a>
+            <a class="page-link"
+               href="/bitacora?page={{subtract page 1}}&mes={{filtros.mes}}&anio={{filtros.anio}}&usuario={{filtros.usuario}}&modulo={{filtros.modulo}}">
+              Anterior
+            </a>
           </li>
 
           {{#each pages}}
             <li class="page-item {{#if active}}active{{/if}}">
-              <a class="page-link" href="/bitacora?page={{num}}">{{num}}</a>
+              <a class="page-link"
+                 href="/bitacora?page={{num}}&mes={{../filtros.mes}}&anio={{../filtros.anio}}&usuario={{../filtros.usuario}}&modulo={{../filtros.modulo}}">
+                {{num}}
+              </a>
             </li>
           {{/each}}
 
           <li class="page-item {{#if (eq page totalPages)}}disabled{{/if}}">
-            <a class="page-link" href="/bitacora?page={{nextPage}}">Siguiente</a>
+            <a class="page-link"
+               href="/bitacora?page={{add page 1}}&mes={{filtros.mes}}&anio={{filtros.anio}}&usuario={{filtros.usuario}}&modulo={{filtros.modulo}}">
+              Siguiente
+            </a>
           </li>
         </ul>
       </nav>
