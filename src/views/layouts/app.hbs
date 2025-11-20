@@ -45,16 +45,67 @@
 
     {{!-- Módulos solo para Admin --}}
     {{#if (eq rolUsuario "Admin")}}
-      <a href="/usuarios" class="nav-link"><i class="bi bi-people"></i>Manejo de usuarios</a>
-      <a href="/tuberia" class="nav-link"><i class="bi bi-diagram-3"></i>Manejo de Tubería</a>
+      <a href="/usuarios" class="nav-link"><i class="bi bi-people"></i>Usuarios</a>
+      <a href="/tuberia" class="nav-link"><i class="bi bi-diagram-3"></i>Tubería</a>
       <a href="/reportes" class="nav-link"><i class="bi bi-file-earmark-text"></i>Reportes</a>
       <a href="/bitacora" class="nav-link"><i class="bi bi-gear"></i>Sistema</a>
     {{/if}}
 
     {{!-- Visible para todos --}}
-    <a href="/inventario" class="nav-link"><i class="bi bi-box"></i>Inventario</a>
+    <div class="submenu-wrapper">
+  
+  <!-- Botón Inventario -->
+  <button class="inventario-toggle {{#if inventarioActivo}}active{{/if}}"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#submenuInventario">
+      <i class="bi bi-box-seam-fill me-2"></i> Inventario
+      <i class="bi bi-caret-down-fill ms-2"></i>
+  </button>
+
+  <!-- Submenú -->
+  <div id="submenuInventario" class="collapse {{#if inventarioActivo}}show{{/if}}">
+    
+    <a href="/inventario/accesorios" 
+       class="nav-sublink {{#if (eq moduloActivo 'Accesorios')}}activo-sub{{/if}}">
+        <i class="bi bi-wrench-adjustable me-2"></i> Accesorios
+    </a>
+
+    <a href="/inventario/cloro" 
+       class="nav-sublink {{#if (eq moduloActivo 'Cloro')}}activo-sub{{/if}}">
+        <i class="bi bi-bucket me-2"></i> Cloro
+    </a>
+
+    <a href="/inventario/herramientas" 
+       class="nav-sublink {{#if (eq moduloActivo 'Herramientas')}}activo-sub{{/if}}">
+        <i class="bi bi-hammer me-2"></i> Herramientas
+    </a>
+
+    <a href="/inventario/limpieza" 
+       class="nav-sublink {{#if (eq moduloActivo 'Limpieza')}}activo-sub{{/if}}">
+        <i class="bi bi-droplet me-2"></i> Limpieza
+    </a>
+
+    <a href="/inventario/medidores" 
+       class="nav-sublink {{#if (eq moduloActivo 'Medidores')}}activo-sub{{/if}}">
+        <i class="bi bi-speedometer2 me-2"></i> Medidores
+    </a>
+
+    <a href="/inventario/pegamentos" 
+       class="nav-sublink {{#if (eq moduloActivo 'Pegamentos')}}activo-sub{{/if}}">
+        <i class="bi bi-stickies me-2"></i> Pegamentos
+    </a>
+
+    <a href="/inventario/tuberia" 
+       class="nav-sublink {{#if (eq moduloActivo 'Tubería')}}activo-sub{{/if}}">
+        <i class="bi bi-diagram-3 me-2"></i> Tubería
+    </a>
+
 
   </div>
+</div>
+
+</div>
 
   <div class="navbar-inferior-right">
     <form action="/logout" method="post">

@@ -13,6 +13,7 @@ import bitacoraRoutes from "./routes/bitacoraRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import tuberiaRoutes from "./routes/tuberiaRoutes.js"; //Ruta para tuberias
 import { handlebarsHelpers } from "./utils/handlebarsHelpers.js";
+import inventarioRoutes from "./routes/inventarioRoutes.js";
 
 
 
@@ -82,6 +83,7 @@ app.use("/", dashboardRoutes);
 app.use("/usuarios", userRoutes);
 app.use("/bitacora", bitacoraRoutes);
 app.use("/tuberia", tuberiaRoutes); //tuberias
+app.use("/inventario", inventarioRoutes);
 app.use("/", authRoutes); // ← auth siempre al final
 
 const PORT = process.env.PORT || 3010;

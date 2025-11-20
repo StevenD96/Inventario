@@ -35,6 +35,12 @@ export const handlebarsHelpers = {
     return arr;
   },
 
+  
+  //NUEVO HELPER PARA INVENTARIO (cantidad < 10)
+  lt(a, b) {
+    return a < b;
+  },
+
   // ===============================
   //  NUEVOS HELPERS PARA BITÁCORA
   // ===============================

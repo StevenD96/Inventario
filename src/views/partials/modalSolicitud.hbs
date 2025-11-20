@@ -1,0 +1,67 @@
+<div class="modal fade" id="modalSolicitud" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <form action="/inventario/solicitud" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title">Solicitud de inventario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <input type="hidden" name="id_item" id="solicitud-id-item">
+
+          <p><strong>Material: </strong> <span id="solicitud-descripcion"></span></p>
+          <p><strong>Disponible: </strong> <span id="solicitud-cantidad"></span></p>
+          <p><strong>Diametro: </strong> <span id="solicitud-diametro"></span></p>
+
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Tipo de movimiento:</label>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="tipo" value="RETIRAR" required>
+              <label class="form-check-label">Salida</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="tipo" value="INGRESAR" required>
+              <label class="form-check-label">Ingreso</label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="fw-semibold">Motivo</label>
+            <textarea name="motivo" class="form-control" required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="fw-semibold">Cantidad</label>
+            <input type="number" name="cantidad" class="form-control" min="1" required>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success">Aceptar</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll(".btn-solicitud").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.getElementById("solicitud-id-item").value = btn.dataset.id;
+    document.getElementById("solicitud-descripcion").innerText = btn.dataset.descripcion;
+    document.getElementById("solicitud-cantidad").innerText = btn.dataset.cantidad;
+    document.getElementById("solicitud-diametro").innerText = btn.dataset.diametro;
+
+  });
+});
+</script>
