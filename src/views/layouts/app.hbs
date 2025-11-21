@@ -46,7 +46,7 @@
     {{!-- Módulos solo para Admin --}}
     {{#if (eq rolUsuario "Admin")}}
       <a href="/usuarios" class="nav-link"><i class="bi bi-people"></i>Usuarios</a>
-      <a href="/tuberia" class="nav-link"><i class="bi bi-diagram-3"></i>Tubería</a>
+      <a href="/tuberia" class="nav-link"><i class="bi bi-diagram-3"></i>Tubería PVC</a>
       <a href="/reportes" class="nav-link"><i class="bi bi-file-earmark-text"></i>Reportes</a>
       <a href="/bitacora" class="nav-link"><i class="bi bi-gear"></i>Sistema</a>
     {{/if}}
@@ -98,9 +98,8 @@
 
     <a href="/inventario/tuberia" 
        class="nav-sublink {{#if (eq moduloActivo 'Tubería')}}activo-sub{{/if}}">
-        <i class="bi bi-diagram-3 me-2"></i> Tubería
+        <i class="bi bi-diagram-3 me-2"></i> Tubería PVC
     </a>
-
 
   </div>
 </div>
@@ -116,6 +115,13 @@
 
     <!-- CONTENIDO -->
     <main class="page-main">
+      {{#if mensaje}}
+        <div class="alert alert-{{mensaje.tipo}} alert-dismissible fade show mb-3" role="alert">
+          <strong>{{mensaje.texto}}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {{/if}}
+
       {{{body}}}
     </main>
 

@@ -71,11 +71,11 @@ app.use(session({
 // Archivos estáticos
 app.use(express.static(path.join(__dirname, "../public")));
 
-/*Rutas
-app.use("/", authRoutes);
-app.use("/", dashboardRoutes);
-app.use("/usuarios", userRoutes);
-app.use("/bitacora", bitacoraRoutes);*/
+app.use((req, res, next) => {
+  res.locals.mensaje = req.session.mensaje || null;
+  delete req.session.mensaje;
+  next();
+});
 
 
 // Rutas

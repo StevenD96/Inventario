@@ -1,11 +1,11 @@
 <section class="container-fluid users-wrapper">
 
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <h1 class="page-title">Inventario - {{moduloInventario}}</h1>
+    <h1 class="page-title">Inventario - Tubería PVC </h1>
   </div>
 
   {{!-- Buscador --}}
-  <form class="mb-3" method="get" action="/inventario/{{moduloInventario}}">
+  <form class="mb-3" method="get" action="/inventario/tuberia">
     <div class="searchbar">
       <i class="bi bi-search"></i>
       <input 
@@ -39,8 +39,7 @@
               <td>{{especificacion}}</td>
 
               {{!-- Cantidad en rojo si es menor de 10 --}}
-              <td class="text-center 
-                {{#if (lt cantidad 10)}} text-danger fw-bold {{/if}}">
+              <td class="text-center {{#if (lt cantidad 10)}} text-danger fw-bold {{/if}}">
                 {{cantidad}}
               </td>
 
@@ -51,10 +50,12 @@
                   data-descripcion="{{descripcion}}"
                   data-cantidad="{{cantidad}}"
                   data-diametro="{{diametro}}"
-                  data-bs-toggle="modal"
+                  data-categoria="{{categoria}}"
+                  data-bs-toggle="modal"      
                   data-bs-target="#modalSolicitud">
-                  <i class="bi bi-arrow-left-right me-1"></i> Solicitud
+                  <i class="bi bi-arrow-left-right me-1"></i> Solicitud     
                 </button>
+
               </td>
             </tr>
           {{/each}}

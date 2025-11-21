@@ -2,7 +2,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
-      <form action="/inventario/solicitud" method="POST">
+      <form id="formSolicitudInventario" action="/inventario/solicitud" method="POST">
         <div class="modal-header">
           <h5 class="modal-title">Solicitud de inventario</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -11,22 +11,22 @@
         <div class="modal-body">
 
           <input type="hidden" name="id_item" id="solicitud-id-item">
+          <input type="hidden" name="categoria" id="solicitud-categoria">
 
           <p><strong>Material: </strong> <span id="solicitud-descripcion"></span></p>
           <p><strong>Disponible: </strong> <span id="solicitud-cantidad"></span></p>
-          <p><strong>Diametro: </strong> <span id="solicitud-diametro"></span></p>
-
+          <p><strong>Diámetro: </strong> <span id="solicitud-diametro"></span></p>
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Tipo de movimiento:</label>
 
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipo" value="RETIRAR" required>
+              <input class="form-check-input" type="radio" name="tipo" value="SALIDA" required>
               <label class="form-check-label">Salida</label>
             </div>
 
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipo" value="INGRESAR" required>
+              <input class="form-check-input" type="radio" name="tipo" value="INGRESO" required>
               <label class="form-check-label">Ingreso</label>
             </div>
           </div>
@@ -38,7 +38,11 @@
 
           <div class="mb-3">
             <label class="fw-semibold">Cantidad</label>
-            <input type="number" name="cantidad" class="form-control" min="1" required>
+            <input id="solicitud-cantidad-input" type="number" name="cantidad" class="form-control" min="1" required>
+          </div>
+
+          <div id="mensaje-error-stock" class="text-danger fw-semibold mt-2" style="display:none;">
+            La cantidad ingresada supera el stock disponible.
           </div>
 
         </div>
@@ -60,8 +64,30 @@ document.querySelectorAll(".btn-solicitud").forEach(btn => {
     document.getElementById("solicitud-id-item").value = btn.dataset.id;
     document.getElementById("solicitud-descripcion").innerText = btn.dataset.descripcion;
     document.getElementById("solicitud-cantidad").innerText = btn.dataset.cantidad;
-    document.getElementById("solicitud-diametro").innerText = btn.dataset.diametro;
-
+    document.getElementById("solicitud-diametro").innerText = btn.dataset.diametro || "";
+    document.getElementById("solicitud-categoria").value = btn.dataset.categoria || "";
   });
+});
+
+
+// ===============================
+// VALIDACIÓN DE STOCK ANTES DE ENVIAR
+// ===============================
+document.getElementById("formSolicitudInventario").addEventListener("submit", function (e) {
+  const tipo = document.querySelector("input[name='tipo']:checked")?.value;
+  const cantidadIngresada = parseInt(document.getElementById("solicitud-cantidad-input").value, 10);
+  const disponible = parseInt(document.getElementById("solicitud-cantidad").innerText, 10);
+
+  // Ocultar mensaje previo
+  document.getElementById("mensaje-error-stock").style.display = "none";
+
+  // Si es salida → validar stock
+  if (tipo === "SALIDA") {
+    if (cantidadIngresada > disponible) {
+      e.preventDefault(); // bloquea el envío
+      document.getElementById("mensaje-error-stock").style.display = "block";
+      return;
+    }
+  }
 });
 </script>

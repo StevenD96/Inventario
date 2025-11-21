@@ -1,0 +1,82 @@
+<!-- Modal Editar Usuario -->
+<div class="modal fade" id="modalUsuarioEditar" tabindex="-1" aria-labelledby="modalUsuarioEditarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content usuarios-modal">
+
+      <!-- Encabezado -->
+      <div class="modal-header border-0">
+        <div class="d-flex align-items-center gap-2">
+          <div class="icono-modal bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-pencil-square fs-4"></i>
+          </div>
+          <h5 class="modal-title fw-semibold" id="modalUsuarioEditarLabel">Editar Usuario</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="modal-body">
+
+        <form action="/usuarios/editar" method="POST" id="formEditarUsuario" class="usuarios-form">
+
+          <!-- ID del usuario (oculto) -->
+          <input type="hidden" id="edit_id_usuario" name="id_usuario">
+
+          <!-- Nombre completo -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre completo <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-person"></i></span>
+              <input type="text" class="form-control border-start-0" id="edit_nombre_completo" name="nombre_completo" required>
+            </div>
+          </div>
+
+          <!-- Nombre de usuario -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre de usuario <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-person-badge"></i></span>
+              <input type="text" class="form-control border-start-0" id="edit_nombre_usuario" name="nombre_usuario" required>
+            </div>
+          </div>
+
+          <!-- Correo -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Correo electrónico <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-envelope"></i></span>
+              <input type="email" class="form-control border-start-0" id="edit_correo" name="correo" required>
+            </div>
+          </div>
+
+          <!-- Rol -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Rol <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-person-gear"></i></span>
+              <select class="form-select border-start-0" id="edit_rol" name="rol" required>
+                <option value="" disabled>Seleccione un rol</option>
+                <option value="User">Usuario</option>
+                <option value="Admin">Administrador</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Nota -->
+          <div class="alert alert-info mt-4" role="alert">
+            <strong>Nota:</strong> La contraseña actual del usuario se mantiene sin cambios.
+          </div>
+
+          <!-- Botones -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save me-1"></i> Guardar Cambios
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
