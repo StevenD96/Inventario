@@ -1,29 +1,60 @@
 <section class="container-fluid users-wrapper">
   <div class="d-flex align-items-center justify-content-between mb-3">
     <h1 class="page-title">Usuarios</h1>
-
     <button class="btn btn-success btn-lg rounded-pill px-4"
         data-bs-toggle="modal"
         data-bs-target="#modalUsuario">
-  <i class="bi bi-plus-lg me-2"></i>Nuevo usuario
-</button>
+      <i class="bi bi-plus-lg me-2"></i>Nuevo usuario
+    </button>
   </div>
 
-  {{!-- Mensajes de éxito o error --}}
-{{#if mensaje}}
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <i class="bi bi-check-circle-fill me-2"></i>{{mensaje}}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-  </div>
-{{/if}}
+  {{!-- Usuario agregado --}}
+  {{#if agregado}}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>Usuario agregado correctamente.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {{/if}}
 
-{{#if error}}
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{error}}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-  </div>
-{{/if}}
+  {{!-- Usuario editado --}}
+  {{#if editado}}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>Usuario editado correctamente.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {{/if}}
 
+  {{!-- Usuario eliminado --}}
+  {{#if eliminado}}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>Usuario eliminado con éxito.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {{/if}}
+
+  {{!-- Usuario duplicado --}}
+  {{#if existe}}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      El usuario o correo ya existe en el sistema.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {{/if}}
+
+  {{!-- Mensajes generales --}}
+  {{#if mensaje}}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>{{mensaje}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {{/if}}
+
+  {{#if error}}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>{{error}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {{/if}}
 
   <form class="mb-3" method="get" action="/usuarios">
     <div class="searchbar">
@@ -56,13 +87,19 @@
                 {{else}}
                   <span class="chip chip-user">{{rolTexto this.rol}}</span>
                 {{/if}}
-
               </td>
               <td class="text-end pe-3">
-                <a class="icon-btn" href="/usuarios/{{this.id_usuario}}/editar" title="Editar">
+                <a class="icon-btn btn-editar-usuario"
+                   data-id="{{this.id_usuario}}"
+                   href="#"
+                   title="Editar">
                   <i class="bi bi-pencil-square"></i>
                 </a>
-                <a class="icon-btn danger" href="/usuarios/{{this.id_usuario}}/eliminar" title="Eliminar">
+
+                <a class="icon-btn danger btn-eliminar-usuario"
+                   data-id="{{this.id_usuario}}"
+                   href="#"
+                   title="Eliminar">
                   <i class="bi bi-trash"></i>
                 </a>
               </td>
@@ -105,6 +142,57 @@
 </section>
 
 {{> usuariosModal }}
+{{> usuariosModalEditar }}
+{{> usuariosModalEliminar }}
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
 
+  /* EDITAR USUARIO */
+  const botonesEditar = document.querySelectorAll(".btn-editar-usuario");
 
+  botonesEditar.forEach(boton => {
+    boton.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      const idUsuario = boton.dataset.id;
+
+      try {
+        const response = await fetch(`/usuarios/ajax/${idUsuario}`);
+        if (!response.ok) throw new Error("Error cargando datos");
+
+        const data = await response.json();
+
+        document.getElementById("edit_id_usuario").value = data.id_usuario;
+        document.getElementById("edit_nombre_completo").value = data.nombre_completo;
+        document.getElementById("edit_nombre_usuario").value = data.nombre_usuario;
+        document.getElementById("edit_correo").value = data.correo;
+        document.getElementById("edit_rol").value = data.rol;
+
+        const modalEditar = new bootstrap.Modal(document.getElementById("modalUsuarioEditar"));
+        modalEditar.show();
+
+      } catch (error) {
+        console.error(error);
+        alert("No se pudo cargar la información del usuario.");
+      }
+    });
+  });
+
+  /* ELIMINAR USUARIO */
+  const botonesEliminar = document.querySelectorAll(".btn-eliminar-usuario");
+
+  botonesEliminar.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const id = btn.dataset.id;
+      document.getElementById("delete_id_usuario").value = id;
+
+      const modal = new bootstrap.Modal(document.getElementById("modalUsuarioEliminar"));
+      modal.show();
+    });
+  });
+
+});
+</script>

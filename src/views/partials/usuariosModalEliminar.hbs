@@ -1,0 +1,44 @@
+<!-- Modal Eliminar Usuario -->
+<div class="modal fade" id="modalUsuarioEliminar" tabindex="-1" aria-labelledby="modalUsuarioEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content usuarios-modal">
+
+      <!-- Encabezado -->
+      <div class="modal-header border-0">
+        <div class="d-flex align-items-center gap-2">
+          <div class="icono-modal bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-exclamation-triangle fs-4"></i>
+          </div>
+          <h5 class="modal-title fw-semibold" id="modalUsuarioEliminarLabel">Eliminar Usuario</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="modal-body">
+
+        <p class="mb-3">
+          ¿Estás seguro de que deseas eliminar este usuario? <br>
+          <strong>Esta acción lo marcará como inactivo</strong> y ya no podrá acceder al sistema.
+        </p>
+
+        <form action="/usuarios/eliminar" method="POST" id="formEliminarUsuario">
+
+          <!-- ID oculto -->
+          <input type="hidden" id="delete_id_usuario" name="id_usuario">
+
+          <!-- Botones -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-trash me-1"></i> Eliminar Usuario
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

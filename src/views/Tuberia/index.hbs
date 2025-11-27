@@ -10,20 +10,52 @@
     </button>
   </div>
 
-  {{!-- Mensajes --}}
-  {{#if mensaje}}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <i class="bi bi-check-circle-fill me-2"></i>{{mensaje}}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-  {{/if}}
 
-  {{#if error}}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <i class="bi bi-exclamation-triangle-fill me-2"></i>{{error}}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-  {{/if}}
+ {{!-- Material agregado --}}
+{{#if add}}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    Material agregado correctamente.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+{{/if}}
+
+{{!-- Material duplicado --}}
+{{#if existe}}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    Ya existe un material con esa descripción, diámetro y especificación.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+{{/if}}
+
+{{!-- Material eliminado --}}
+{{#if delete}}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    Material eliminado con éxito.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+{{/if}}
+
+{{!-- Material editado --}}
+{{#if edit}}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    Material actualizado correctamente.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+{{/if}}
+
+{{!-- Error general --}}
+{{#if error}}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    Ocurrió un error procesando la acción.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+{{/if}}
+
 
 
   {{!-- Buscador --}}
@@ -62,13 +94,29 @@
               <td>{{cantidad}}</td>
 
               <td class="text-end pe-3">
-                <a class="icon-btn" href="/tuberia/{{id_tuberia}}/editar" title="Editar">
-                  <i class="bi bi-pencil-square"></i>
-                </a>
+              <a 
+                class="icon-btn btn-editar-tuberia"
+                href="#"
+                data-id="{{id_tuberia}}"
+                data-descripcion="{{descripcion}}"
+                data-diametro="{{diametro}}"
+                data-especificacion="{{especificacion}}"
+                data-cantidad="{{cantidad}}"
+              >
+                <i class="bi bi-pencil-square"></i>
+              </a>
 
-                <a class="icon-btn danger" href="/tuberia/{{id_tuberia}}/eliminar" title="Eliminar">
+
+
+                <a 
+                  class="icon-btn danger btn-eliminar-tuberia"
+                  data-id="{{id_tuberia}}"
+                  href="#"
+                  title="Eliminar"
+                >
                   <i class="bi bi-trash"></i>
                 </a>
+
               </td>
             </tr>
           {{/each}}
@@ -112,5 +160,50 @@
 </section>
 
 {{> tuberiaModal }}
+{{> tuberiaModalEditar }}
+{{> tuberiaModalEliminar }}
 
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* --- ELIMINAR MATERIAL --- */
+  const botonesEliminar = document.querySelectorAll(".btn-eliminar-tuberia");
+
+  botonesEliminar.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const id = btn.dataset.id;
+      document.getElementById("delete_id_tuberia").value = id;
+
+      const modal = new bootstrap.Modal(document.getElementById("modalTuberiaEliminar"));
+      modal.show();
+    });
+  });
+
+  /* --- EDITAR MATERIAL --- */
+  const editarBtns = document.querySelectorAll(".btn-editar-tuberia");
+
+  editarBtns.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const id = btn.dataset.id;
+
+      document.getElementById("edit_id_tuberia").value = id;
+      document.getElementById("edit_descripcion").value = btn.dataset.descripcion;
+      document.getElementById("edit_diametro").value = btn.dataset.diametro;
+      document.getElementById("edit_especificacion").value = btn.dataset.especificacion;
+      document.getElementById("edit_cantidad").value = btn.dataset.cantidad;
+
+      const form = document.getElementById("formEditarMaterial");
+      form.action = `/tuberia/editar/${id}`;
+
+      const modal = new bootstrap.Modal(document.getElementById("modalEditarTuberia"));
+      modal.show();
+    });
+  });
+
+});
+</script>

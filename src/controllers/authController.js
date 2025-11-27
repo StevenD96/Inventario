@@ -2,7 +2,7 @@
 import pool from "../models/db.js";
 import bcrypt from "bcryptjs";
 
-// === Mostrar formulario de login ===
+//Mostrar formulario de login 
 export const mostrarLogin = (req, res) => {
   res.render("auth/login", { layout: "main", title: "Iniciar Sesión" });
 };
