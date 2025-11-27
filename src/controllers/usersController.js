@@ -241,10 +241,10 @@ export const eliminarUsuario = async (req, res) => {
 
     const nombreUsuario = rows.length ? rows[0].nombre_usuario : "(desconocido)";
 
-    // 2️⃣ Inactivar usuario mediante SP
+    // Inactivar usuario mediante SP
     await pool.query("CALL sp_inactivar_usuario(?)", [id_usuario]);
 
-    // 3️⃣ Registrar en bitácora con nombre real del usuario
+    //Registrar en bitácora con nombre real del usuario
     await pool.query(
       "CALL sp_registrar_bitacora(?, ?, ?, ?)",
       [
@@ -263,3 +263,127 @@ export const eliminarUsuario = async (req, res) => {
   }
 };
 
+// Listar usuarios inactivos
+export const listarUsuariosInactivos = async (req, res) => {
+  try {
+    const usuarioSesion = req.session.usuario;
+    if (!usuarioSesion) return res.redirect("/");
+
+    const page = Math.max(parseInt(req.query.page || "1"), 1);
+    const q = (req.query.q || "").trim();
+    const PAGE_SIZE = 10;
+    const offset = (page - 1) * PAGE_SIZE;
+
+    // Llamar al SP
+    const [result] = await pool.query(
+      "CALL sp_listar_usuarios_inactivos(?, ?, ?)",
+      [q, PAGE_SIZE, offset]
+    );
+
+    const total = result[0][0].total;
+    const usuarios = result[1];
+
+    // Registrar en bitácora usando SP (consistente con el módulo Usuarios)
+    await pool.query(
+      "CALL sp_registrar_bitacora(?, ?, ?, ?)",
+      [
+        usuarioSesion.id_usuario,
+        "Usuarios",
+        "CONSULTAR",
+        "Consulta de usuarios inactivos"
+      ]
+    );
+
+    // Render
+    res.render("Users/inactivos", {
+      layout: "app",
+
+      usuario: usuarioSesion,
+      nombreUsuario: usuarioSesion.nombre_completo,
+      rolUsuario: usuarioSesion.rol,
+
+      usuarios,
+      q,
+      page,
+      total,
+      totalPages: Math.ceil(total / PAGE_SIZE),
+      mostrando: usuarios.length ? Math.min(page * PAGE_SIZE, total) : 0,
+
+      prevPage: Math.max(1, page - 1),
+      nextPage: Math.min(Math.ceil(total / PAGE_SIZE), page + 1),
+      pages: Array.from({ length: Math.ceil(total / PAGE_SIZE) }, (_, i) => ({
+        num: i + 1,
+        active: page === i + 1,
+      })),
+
+      reactivado: req.query.reactivado,
+      error: req.query.error
+    });
+
+  } catch (error) {
+    console.error("Error listando usuarios inactivos:", error);
+
+    // Registrar error con SP (consistente)
+    await pool.query(
+      "CALL sp_registrar_bitacora(?, ?, ?, ?)",
+      [
+        req.session.usuario?.id_usuario || null,
+        "Usuarios",
+        "ERROR",
+        error.message
+      ]
+    );
+
+    res.status(500).send("Error interno.");
+  }
+};
+
+/*Activar usuarios inactivos*/ 
+/* Activar usuarios inactivos */ 
+export const reactivarUsuario = async (req, res) => {
+  const { id_usuario } = req.body;
+  const id_admin = req.session.usuario.id_usuario;
+
+  try {
+    // Obtener datos del usuario antes de actualizar (para bitácora)
+    const [[usuario]] = await pool.query(
+      "SELECT nombre_usuario FROM Usuario WHERE id_usuario = ?",
+      [id_usuario]
+    );
+
+    // Reactivar usuario
+    await pool.query(
+      "UPDATE Usuario SET estado = 'Activo' WHERE id_usuario = ?",
+      [id_usuario]
+    );
+
+    // Registrar bitácora usando el SP (estándar del sistema)
+    await pool.query(
+      "CALL sp_registrar_bitacora(?, ?, ?, ?)",
+      [
+        id_admin,
+        "Usuarios",
+        "REACTIVAR",
+        `Usuario ${usuario.nombre_usuario} reactivado`
+      ]
+    );
+
+    res.redirect("/usuarios/inactivos?reactivado=1");
+
+  } catch (err) {
+    console.error("Error reactivando usuario:", err);
+
+    // Registrar error en bitácora (según estándar)
+    await pool.query(
+      "CALL sp_registrar_bitacora(?, ?, ?, ?)",
+      [
+        id_admin,
+        "Usuarios",
+        "ERROR",
+        err.message
+      ]
+    );
+
+    res.redirect("/usuarios/inactivos?error=1");
+  }
+};

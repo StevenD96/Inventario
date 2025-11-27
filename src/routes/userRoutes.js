@@ -3,7 +3,8 @@ import express from "express";
 import { verificarSesion } from "../middleware/authMiddleware.js";
 import { soloAdmin } from "../middleware/rolesMiddleware.js";
 
-import { listarUsuarios, crearUsuario,   obtenerUsuarioPorId,   editarUsuario, eliminarUsuario
+import { listarUsuarios, crearUsuario,   obtenerUsuarioPorId,   editarUsuario, eliminarUsuario,  listarUsuariosInactivos,
+  reactivarUsuario
 } from "../controllers/usersController.js";
 
 const router = express.Router();
@@ -22,6 +23,14 @@ router.post("/editar", verificarSesion, soloAdmin, editarUsuario);
 
 //Editar los datos del usuario
 router.post("/eliminar", verificarSesion, soloAdmin, eliminarUsuario);
+
+//Listado con usuarios inactivos
+router.get("/inactivos", verificarSesion, soloAdmin, listarUsuariosInactivos);
+
+//Reactivar usuarios
+router.post("/reactivar", verificarSesion, soloAdmin, reactivarUsuario);
+
+
 
 
 export default router;
