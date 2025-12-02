@@ -10,9 +10,8 @@ export const listarUsuarios = async (req, res) => {
   const q = (req.query.q || "").trim();
   const offset = (page - 1) * PAGE_SIZE;
 
-  // filtros de búsqueda en nombre, usuario o correo
   const like = `%${q}%`;
-  // Codigo de consulta
+
   try {
     // total
     const [[{ total }]] = await pool.query(
@@ -40,10 +39,23 @@ export const listarUsuarios = async (req, res) => {
       pages.push({ num: i, active: i === page });
     }
 
+    // === REGISTRO DE BITÁCORA QUE FALTABA ===
+    await pool.query(
+      "CALL sp_registrar_bitacora(?, ?, ?, ?)",
+      [
+        req.session.usuario.id_usuario,
+        "Usuarios",
+        "CONSULTAR",
+        q ? `El usuario consultó el listado de usuarios filtrando por: ${q}` //`Consultó el listado de usuarios filtrando por
+          : "El usuario consultó el listado de usuarios" //Consultó el listado de usuarios
+      ]
+    );
+
+    // Render
     res.render("users/index", {
       layout: "app",
       title: "Usuarios",
-      usuario: req.session.usuario,        // para el encabezado
+      usuario: req.session.usuario,
       usuarios: rows,
       q,
       page,
@@ -59,13 +71,14 @@ export const listarUsuarios = async (req, res) => {
       editado: req.query.edit,
       eliminado: req.query.delete,
       existe: req.query.existe
-      
     });
+
   } catch (err) {
     console.error("Error listando usuarios:", err.message);
     res.status(500).send("Error interno");
   }
 };
+
 
 export const crearUsuario = async (req, res) => {
   const { nombre_completo, nombre_usuario, correo, rol } = req.body;
@@ -363,7 +376,7 @@ export const reactivarUsuario = async (req, res) => {
       [
         id_admin,
         "Usuarios",
-        "REACTIVAR",
+        "CREAR",
         `Usuario ${usuario.nombre_usuario} reactivado`
       ]
     );

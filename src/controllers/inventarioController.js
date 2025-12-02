@@ -44,7 +44,7 @@ export const inventarioTuberia = async (req, res) => {
     // Registrar consulta
     await registrarBitacora(
       req,
-      "Tubería",
+      "Inventario",
       "CONSULTAR",
       "El usuario consultó el inventario de tuberías"
     );
@@ -111,10 +111,13 @@ export const procesarSolicitud = async (req, res) => {
       return res.redirect("/inventario/tuberia?msg=cantidad");
     }
 
+    // Texto adicional para el diámetro (por defecto vacío)
+    let diametroTexto = "";
+
     // SOLO tubería por ahora
     if (categoria === "Tubería") {
       const [[actual]] = await pool.query(
-        "SELECT cantidad FROM Tuberia WHERE id_tuberia = ?",
+        "SELECT cantidad, diametro FROM Tuberia WHERE id_tuberia = ?",
         [id_item]
       );
 
@@ -137,6 +140,13 @@ export const procesarSolicitud = async (req, res) => {
         "UPDATE Tuberia SET cantidad = cantidad + ? WHERE id_tuberia = ?",
         [signo * cantidadInt, id_item]
       );
+
+      // Armar texto de diámetro para la bitácora
+      if (actual.diametro) {
+        //diametroTexto = ` Diámetro: ${actual.diametro}"`;
+        diametroTexto = ` Diámetro: ${actual.diametro}`;
+
+      }
     }
 
     // Registrar movimiento final
@@ -149,12 +159,12 @@ export const procesarSolicitud = async (req, res) => {
       motivo
     ]);
 
-    // Registrar en bitácora
+    // Registrar en bitácora (ya con el diámetro incluido si aplica)
     await registrarBitacora(
       req,
       "Inventario",
       "EDITAR",
-      `Movimiento de inventario (${categoria}) - ${tipo} de ${cantidadInt}. Motivo: ${motivo}`
+      `Movimiento de inventario (${categoria}) - ${tipo} de ${cantidadInt},${diametroTexto}, Motivo: ${motivo}`//registrar descripcion
     );
 
     return res.redirect("/inventario/tuberia?msg=ok");

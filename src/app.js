@@ -78,13 +78,15 @@ app.use((req, res, next) => {
 });
 
 
-// Rutas
-app.use("/", dashboardRoutes);
-app.use("/usuarios", userRoutes);
-app.use("/bitacora", bitacoraRoutes);
-app.use("/tuberia", tuberiaRoutes); //tuberias
+// Rutas — orden correcto
+app.use("/", authRoutes);              // LOGIN primero
+app.use("/usuarios", userRoutes);      // usuarios
+app.use("/bitacora", bitacoraRoutes);  // bitácora
+app.use("/tuberia", tuberiaRoutes);    // tubería
 app.use("/inventario", inventarioRoutes);
-app.use("/", authRoutes); // ← auth siempre al final
+
+app.use("/dashboard", dashboardRoutes); // dashboard al final y con prefijo
+
 
 const PORT = process.env.PORT || 3010;
 app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));

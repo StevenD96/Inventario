@@ -1,12 +1,22 @@
-// src/routes/bitacoraRoutes.js
 import express from "express";
 import { verificarSesion } from "../middleware/authMiddleware.js";
 import { soloAdmin } from "../middleware/rolesMiddleware.js";
-import { listarBitacora } from "../controllers/bitacoraController.js";
+import {
+  listarBitacora,
+  exportarBitacoraExcel,
+  exportarBitacoraPdf, eliminarBitacoraFiltrada
+
+} from "../controllers/bitacoraController.js";
 
 const router = express.Router();
 
-// Listado real de bitácora con filtros
 router.get("/", verificarSesion, soloAdmin, listarBitacora);
+router.get("/export/excel", verificarSesion, soloAdmin, exportarBitacoraExcel);
+router.get("/export/pdf", verificarSesion, soloAdmin, exportarBitacoraPdf);
+router.post("/eliminar", verificarSesion, soloAdmin, eliminarBitacoraFiltrada);
+
 
 export default router;
+
+
+
