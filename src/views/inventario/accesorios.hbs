@@ -1,0 +1,103 @@
+<section class="container-fluid users-wrapper">
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="page-title">Inventario - Accesorios PVC</h1>
+  </div>
+
+  {{!-- Buscador --}}
+  <form class="mb-3" method="get" action="/inventario/accesorios">
+    <div class="searchbar">
+      <i class="bi bi-search"></i>
+      <input 
+        type="text" 
+        name="q" 
+        value="{{q}}" 
+        placeholder="Buscar por descripción, tipo o diámetro..."
+      />
+    </div>
+  </form>
+
+  {{!-- Tabla --}}
+  <div class="table-responsive users-card">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Descripción</th>
+          <th>Tipo</th>
+          <th>Diámetro</th>
+          <th>Especificación</th>
+          <th class="text-center">Cantidad</th>
+          <th class="text-end">Solicitud</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#if items.length}}
+          {{#each items}}
+            <tr>
+              <td>{{descripcion}}</td>
+              <td>{{tipo}}</td>
+              <td>{{diametro}}</td>
+              <td>{{especificacion}}</td>
+
+              <td class="text-center {{#if (lt cantidad 10)}} text-danger fw-bold {{/if}}">
+                {{cantidad}}
+              </td>
+
+              <td class="text-end pe-3">
+                <button 
+                  class="btn btn-sm btn-primary rounded-pill px-3 btn-solicitud" 
+                  data-id="{{id_item}}"
+                  data-descripcion="{{descripcion}}"
+                  data-tipo="{{tipo}}"
+                  data-cantidad="{{cantidad}}"
+                  data-diametro="{{diametro}}"
+                  data-categoria="{{categoria}}"
+                  data-bs-toggle="modal"      
+                  data-bs-target="#modalSolicitud">
+                  <i class="bi bi-arrow-left-right me-1"></i> Solicitud
+                </button>
+              </td>
+            </tr>
+          {{/each}}
+        {{else}}
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+              No hay accesorios para mostrar.
+            </td>
+          </tr>
+        {{/if}}
+      </tbody>
+    </table>
+  </div>
+
+  {{!-- Paginación --}}
+  <div class="d-flex align-items-center justify-content-between mt-3">
+    <div class="text-muted">
+      Mostrando {{mostrando}} de {{total}} registros
+    </div>
+
+    {{#if (gt totalPages 1)}}
+      <nav>
+        <ul class="pagination mb-0">
+          <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+            <a class="page-link" href="?page={{prevPage}}&q={{q}}">Anterior</a>
+          </li>
+
+          {{#each pages}}
+            <li class="page-item {{#if active}}active{{/if}}">
+              <a class="page-link" href="?page={{num}}&q={{../q}}">{{num}}</a>
+            </li>
+          {{/each}}
+
+          <li class="page-item {{#if (eq page totalPages)}}disabled{{/if}}">
+            <a class="page-link" href="?page={{nextPage}}&q={{q}}">Siguiente</a>
+          </li>
+        </ul>
+      </nav>
+    {{/if}}
+  </div>
+
+</section>
+
+{{> modalSolicitud }}

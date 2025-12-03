@@ -59,14 +59,10 @@ export const listarAccesorios = async (req, res) => {
     res.render("Accesorios/index", {
       layout: "app",
       title: "Accesorios",
-
       usuario,
       nombreUsuario: usuario.nombre_completo,
       rolUsuario: usuario.rol,
-
-      // Activar menú
       moduloActivo: "Accesorios",
-      //inventarioActivo: true,
 
       accesorios: rows,
       q,
