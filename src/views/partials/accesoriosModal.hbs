@@ -1,0 +1,133 @@
+<!-- Modal Agregar Accesorio -->
+<div class="modal fade" id="modalAccesorio" tabindex="-1" aria-labelledby="modalAccesorioLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content usuarios-modal">
+
+      <!-- Encabezado -->
+      <div class="modal-header border-0">
+        <div class="d-flex align-items-center gap-2">
+          <div class="icono-modal bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-wrench-adjustable fs-4"></i>
+          </div>
+
+          <h5 class="modal-title fw-semibold" id="modalAccesorioLabel">Agregar Nuevo Accesorio</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="modal-body">
+        <form action="/accesorios/crear" method="POST" id="formNuevoAccesorio" class="usuarios-form">
+
+          <!-- Descripción -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Descripción <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-card-text"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control border-start-0" 
+                name="descripcion" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Tipo -->
+        <div class="mb-3">
+        <label class="form-label fw-semibold">Tipo <span class="text-danger">*</span></label>
+        <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-menu-button-wide"></i>
+            </span>
+
+            <select 
+            class="form-control border-start-0" 
+            name="tipo"
+            required
+            >
+            <option value="" selected disabled>Seleccione un tipo...</option>
+            <option value="Abrazadera">Abrazadera</option>
+            <option value="Adaptador">Adaptador</option>
+            <option value="Codo">Codo</option>
+            <option value="Reducción">Reducción</option>
+            <option value="Tapón">Tapón</option>
+            <option value="Tee">Tee</option>
+            <option value="Unión">Unión</option>
+            <option value="Válvula">Válvula</option>
+
+
+
+
+
+
+            </select>
+        </div>
+        </div>
+
+
+          <!-- Diámetro -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Diámetro <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-circle"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control border-start-0" 
+                name="diametro" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Especificación -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Especificación <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-tag"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control border-start-0" 
+                name="especificacion" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Cantidad -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Cantidad <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-123"></i>
+              </span>
+              <input 
+                type="number" 
+                class="form-control border-start-0" 
+                name="cantidad"
+                min="0"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Botones -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-check-circle me-1"></i> Agregar Accesorio
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

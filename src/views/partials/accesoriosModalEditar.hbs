@@ -1,0 +1,77 @@
+<!-- Modal Editar Accesorio -->
+<div class="modal fade" id="modalEditarAccesorio" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content usuarios-modal">
+
+      <!-- Encabezado -->
+      <div class="modal-header border-0">
+        <div class="d-flex align-items-center gap-2">
+          <div class="icono-modal bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-pencil-square fs-4"></i>
+          </div>
+
+          <h5 class="modal-title fw-semibold">Editar Accesorio</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="modal-body">
+        <form action="/accesorios/editar" method="POST" id="formEditarAccesorio">
+
+          <input type="hidden" name="id_accesorio" id="edit_id_accesorio">
+
+          <!-- Descripción -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Descripción</label>
+            <input type="text" class="form-control" id="edit_descripcion" name="descripcion" required>
+          </div>
+
+          <!-- Tipo -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Tipo</label>
+            <select class="form-select" id="edit_tipo" name="tipo" required>
+              <option value="" disabled>Seleccione un tipo...</option>
+              <option value="Unión">Unión</option>
+              <option value="Tee">Tee</option>
+              <option value="Codo">Codo</option>
+              <option value="Válvula">Válvula</option>
+              <option value="Reducción">Reducción</option>
+              <option value="Tapón">Tapón</option>
+              <option value="Abrazadera">Abrazadera</option>
+              <option value="Adaptador">Adaptador</option>
+            </select>
+          </div>
+
+          <!-- Diámetro -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Diámetro</label>
+            <input type="text" class="form-control" id="edit_diametro" name="diametro" required>
+          </div>
+
+          <!-- Especificación -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Especificación</label>
+            <input type="text" class="form-control" id="edit_especificacion" name="especificacion" required>
+          </div>
+
+          <!-- Cantidad -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Cantidad</label>
+            <input type="number" class="form-control" id="edit_cantidad" name="cantidad" min="0" required>
+          </div>
+
+          <!-- Botones -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-circle me-1"></i> Guardar Cambios
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
