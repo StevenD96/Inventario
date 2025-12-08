@@ -15,7 +15,6 @@ const router = Router();
 
 router.get("/", verificarSesion, soloAdmin, listarTuberia);
 router.post("/crear", verificarSesion, soloAdmin, crearTuberia);
-//router.post("/editar", verificarSesion, soloAdmin, editarTuberia);
 router.post("/editar/:id", verificarSesion, soloAdmin, editarTuberia);
 router.post("/eliminar", verificarSesion, soloAdmin, eliminarTuberia); 
 

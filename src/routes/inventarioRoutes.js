@@ -4,9 +4,13 @@ import {
   inventarioTuberia,
   procesarSolicitud
 } from "../controllers/inventarioController.js";
+
 // Inventario de Accesorios
 import { inventarioAccesorios
    } from "../controllers/inventarioController.js";
+
+//Inventario  
+import { inventarioPegamentos } from "../controllers/inventarioController.js";
 
 
 const router = express.Router();
@@ -16,6 +20,10 @@ router.get("/tuberia", verificarSesion, inventarioTuberia);
 
 //Inventario de Accesorios
 router.get("/accesorios", verificarSesion, inventarioAccesorios);
+
+//Inventario de Pegamentos
+router.get("/pegamentos", verificarSesion, inventarioPegamentos);
+
 
 // Procesar movimientos (Ingreso / Salida) desde el modal
 router.post("/solicitud", verificarSesion, procesarSolicitud);

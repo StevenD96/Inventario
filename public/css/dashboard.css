@@ -129,6 +129,14 @@ body.bg-app {
   transition: all 0.3s ease-in-out;
 }
 
+/* ======== CONTENEDOR DEL BOTÓN ======== */
+/* Mantiene el botón a la derecha sin moverse */
+.logout-wrapper {
+  margin-left: auto; 
+  display: flex;
+  align-items: center;
+}
+
 .btn-cerrar:hover {
   background-color: #e74c3c;
   color: #fff;
@@ -227,4 +235,22 @@ body.bg-app {
   font-weight: 600;
   transform: translateX(3px);
 }
+
+
+/* Acomoda todos los enlaces del submenú Inventario */
+.nav-sublink {
+    display: flex;
+    align-items: center;
+    gap: 10px;              /* Separación uniforme entre ícono y texto */
+    padding: 6px 16px;
+    font-size: 15px;
+}
+
+/* Forzar que los íconos tengan el mismo tamaño y alineación */
+.nav-sublink i {
+    font-size: 1.2rem;      /* Tamaño uniforme de todos los íconos */
+    width: 22px;            /* Reserva espacio igual para todos */
+    text-align: center;     /* Centra el ícono dentro de ese espacio */
+}
+
 

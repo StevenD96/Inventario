@@ -39,10 +39,10 @@
               <td>{{tipo}}</td>
               <td>{{diametro}}</td>
               <td>{{especificacion}}</td>
-
-              <td class="text-center {{#if (lt cantidad 10)}} text-danger fw-bold {{/if}}">
+              <td class="text-center {{#unless (gt cantidad 20)}} text-danger fw-bold {{/unless}}">
                 {{cantidad}}
               </td>
+
 
               <td class="text-end pe-3">
                 <button 

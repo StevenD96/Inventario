@@ -1,0 +1,95 @@
+<section class="container-fluid users-wrapper">
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="page-title">Inventario - Pegamentos</h1>
+  </div>
+
+  {{!-- BUSCADOR --}}
+  <form method="get" action="/inventario/pegamentos">
+    <div class="input-group mb-3">
+      <input 
+        type="text" 
+        name="q" 
+        class="form-control" 
+        placeholder="Buscar pegamento..." 
+        value="{{q}}"
+      >
+      <button class="btn btn-success" type="submit">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </form>
+
+  {{!-- TABLA --}}
+  <div class="table-responsive users-card">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Descripción</th>
+          <th>Especificación</th>
+          <th class="text-center">Cantidad</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#if items.length}}
+          {{#each items}}
+            <tr>
+              <td>{{descripcion}}</td>
+              <td>{{especificacion}}</td>
+
+              <td class="text-center {{#if (lte cantidad 20)}} text-danger fw-bold {{/if}}">
+                {{cantidad}}
+              </td>
+
+              <td class="text-end">
+                <button 
+                  class="btn btn-success btn-sm rounded-pill px-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalMovimiento"
+                  data-id="{{id_item}}"
+                  data-descripcion="{{descripcion}}"
+                  data-categoria="Pegamentos"
+                >
+                  <i class="bi bi-arrow-left-right me-1"></i>
+                  Movimiento
+                </button>
+              </td>
+            </tr>
+          {{/each}}
+        {{else}}
+          <tr>
+            <td colspan="4" class="text-center text-muted py-4">
+              No se encontraron pegamentos en el inventario.
+            </td>
+          </tr>
+        {{/if}}
+      </tbody>
+    </table>
+  </div>
+
+  {{!-- PAGINACIÓN --}}
+  {{#if (gt totalPages 1)}}
+    <nav class="mt-3">
+      <ul class="pagination">
+        <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+          <a class="page-link" href="/inventario/pegamentos?page={{subtract page 1}}&q={{q}}">Anterior</a>
+        </li>
+
+        {{#each pages}}
+          <li class="page-item {{#if active}}active{{/if}}">
+            <a class="page-link" href="/inventario/pegamentos?page={{num}}&q={{../q}}">{{num}}</a>
+          </li>
+        {{/each}}
+
+        <li class="page-item {{#if (eq page totalPages)}}disabled{{/if}}">
+          <a class="page-link" href="/inventario/pegamentos?page={{add page 1}}&q={{q}}">Siguiente</a>
+        </li>
+      </ul>
+    </nav>
+  {{/if}}
+
+</section>
+
+{{> modalInventario }}

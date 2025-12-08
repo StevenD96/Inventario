@@ -6,7 +6,6 @@ const PAGE_SIZE = 10;
 // ======================================================
 // LISTAR ACCESORIOS
 // ======================================================
-
 export const listarAccesorios = async (req, res) => {
   try {
     const usuario = req.session.usuario;
@@ -16,27 +15,15 @@ export const listarAccesorios = async (req, res) => {
     const q = (req.query.q || "").trim();
     const offset = (page - 1) * PAGE_SIZE;
 
-    const like = `%${q}%`;
+    // === LLAMAR SP ===
+    const [result] = await pool.query("CALL sp_accesorios_listar(?, ?, ?)", [
+      q,
+      PAGE_SIZE,
+      offset
+    ]);
 
-    // === 1) TOTAL ===
-    const [[{ total }]] = await pool.query(
-      `SELECT COUNT(*) AS total
-       FROM Accesorios
-       WHERE estado <> 'Inactivo'
-       AND ( ? = '' OR descripcion LIKE ? OR tipo LIKE ? OR diametro LIKE ? )`,
-      [q, like, like, like]
-    );
-
-    // === 2) PAGINA ===
-    const [rows] = await pool.query(
-      `SELECT id_accesorio, descripcion, tipo, diametro, especificacion, cantidad
-       FROM Accesorios
-       WHERE estado <> 'Inactivo'
-       AND ( ? = '' OR descripcion LIKE ? OR tipo LIKE ? OR diametro LIKE ? )
-       ORDER BY descripcion
-       LIMIT ? OFFSET ?`,
-      [q, like, like, like, PAGE_SIZE, offset]
-    );
+    const total = result[0][0]?.total || 0;
+    const rows = result[1] || [];
 
     // === PAGINACIÓN ===
     const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
@@ -45,17 +32,15 @@ export const listarAccesorios = async (req, res) => {
       active: i + 1 === page
     }));
 
-    // === REGISTRAR BITÁCORA ===
+    // === BITÁCORA ===
     await registrarBitacora(
       req,
       "Accesorios",
       "CONSULTAR",
-      //"Consulta del listado de accesorios"
       "El usuario consultó el listado de accesorios"
-
     );
 
-    // === RENDERIZAR ===
+    // === RENDER ===
     res.render("Accesorios/index", {
       layout: "app",
       title: "Accesorios",
@@ -92,6 +77,7 @@ export const listarAccesorios = async (req, res) => {
     res.status(500).send("Error interno al listar accesorios.");
   }
 };
+
 
 // ======================================================
 // CREAR ACCESORIO

@@ -1,48 +1,71 @@
 <section class="container-fluid users-wrapper">
 
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <h1 class="page-title">Inventario - Tubería PVC </h1>
+    <h1 class="page-title">Inventario - {{moduloInventario}}</h1>
   </div>
 
-  {{!-- Buscador --}}
-  <form class="mb-3" method="get" action="/inventario/tuberia">
+  {{!-- Buscador dinámico --}}
+  <form class="mb-3" method="get" action="/inventario/{{moduloInventario}}">
     <div class="searchbar">
       <i class="bi bi-search"></i>
       <input 
         type="text" 
         name="q" 
         value="{{q}}" 
-        placeholder="Buscar por descripción o diámetro..."
+        placeholder="Buscar..."
       />
     </div>
   </form>
 
-  {{!-- Tabla --}}
+  {{!-- Tabla dinámica --}}
   <div class="table-responsive users-card">
     <table class="table align-middle mb-0">
+
       <thead>
         <tr>
           <th>Descripción</th>
-          <th>Diámetro</th>
-          <th>Especificación</th>
+
+          {{!-- Solo Tubería muestra diámetro --}}
+          {{#if (eq moduloInventario "Tubería")}}
+            <th>Diámetro</th>
+          {{/if}}
+
+          {{!-- Solo Pegamentos muestra especificación --}}
+          {{#if (eq moduloInventario "Pegamentos")}}
+            <th>Especificación</th>
+          {{/if}}
+
           <th class="text-center">Cantidad</th>
           <th class="text-end">Solicitud</th>
         </tr>
       </thead>
 
       <tbody>
+
         {{#if items.length}}
           {{#each items}}
-            <tr>
-              <td>{{descripcion}}</td>
-              <td>{{diametro}}</td>
-              <td>{{especificacion}}</td>
 
-              {{!-- Cantidad en rojo si es menor de 10 --}}
-              <td class="text-center {{#if (lt cantidad 10)}} text-danger fw-bold {{/if}}">
+            <tr>
+
+              {{!-- Descripción --}}
+              <td>{{descripcion}}</td>
+
+              {{!-- Tubería --}}
+              {{#if (eq ../moduloInventario "Tubería")}}
+                <td>{{diametro}}</td>
+              {{/if}}
+
+              {{!-- Pegamentos --}}
+              {{#if (eq ../moduloInventario "Pegamentos")}}
+                <td>{{especificacion}}</td>
+              {{/if}}
+
+              {{!-- Cantidad --}}
+              <td class="text-center {{#unless (gt cantidad 30)}} text-danger fw-bold {{/unless}}">
                 {{cantidad}}
               </td>
 
+              {{!-- Botón de solicitud --}}
               <td class="text-end pe-3">
                 <button 
                   class="btn btn-sm btn-primary rounded-pill px-3 btn-solicitud" 
@@ -50,14 +73,17 @@
                   data-descripcion="{{descripcion}}"
                   data-cantidad="{{cantidad}}"
                   data-diametro="{{diametro}}"
+                  data-especificacion="{{especificacion}}"
                   data-categoria="{{categoria}}"
-                  data-bs-toggle="modal"      
-                  data-bs-target="#modalSolicitud">
-                  <i class="bi bi-arrow-left-right me-1"></i> Solicitud     
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalSolicitud"
+                >
+                  <i class="bi bi-arrow-left-right me-1"></i> Solicitud
                 </button>
-
               </td>
+
             </tr>
+
           {{/each}}
         {{else}}
           <tr>
@@ -66,6 +92,7 @@
             </td>
           </tr>
         {{/if}}
+
       </tbody>
     </table>
   </div>
@@ -79,6 +106,7 @@
     {{#if (gt totalPages 1)}}
       <nav>
         <ul class="pagination mb-0">
+
           <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
             <a class="page-link" href="?page={{prevPage}}&q={{q}}">Anterior</a>
           </li>
@@ -92,6 +120,7 @@
           <li class="page-item {{#if (eq page totalPages)}}disabled{{/if}}">
             <a class="page-link" href="?page={{nextPage}}&q={{q}}">Siguiente</a>
           </li>
+
         </ul>
       </nav>
     {{/if}}

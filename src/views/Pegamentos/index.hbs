@@ -1,0 +1,188 @@
+<section class="container-fluid users-wrapper">
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="page-title">Pegamentos PVC</h1>
+
+    <button type="button"
+        class="btn btn-success btn-lg rounded-pill px-4"
+        data-bs-toggle="modal"
+        data-bs-target="#modalPegamento">
+      <i class="bi bi-plus-lg me-2"></i>Nuevo pegamento
+    </button>
+  </div>
+
+  {{!-- Mensajes --}}
+  {{#if add}}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      Material agregado correctamente.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {{/if}}
+
+  {{#if edit}}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      Material actualizado correctamente.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {{/if}}
+
+  {{#if delete}}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      Material eliminado con éxito.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {{/if}}
+
+  {{#if error}}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      Ocurrió un error procesando la acción.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {{/if}}
+
+  {{!-- Buscador --}}
+  <form class="mb-3" method="get" action="/pegamentos">
+    <div class="searchbar">
+      <i class="bi bi-search"></i>
+      <input 
+        type="text" 
+        name="q" 
+        value="{{q}}" 
+        placeholder="Buscar por descripción o especificación..."
+      />
+    </div>
+  </form>
+
+  {{!-- Tabla --}}
+  <div class="table-responsive users-card">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Descripción</th>
+          <th>Especificación</th>
+          <th>Cantidad</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#if pegamentos.length}}
+          {{#each pegamentos}}
+            <tr>
+              <td>{{descripcion}}</td>
+              <td>{{especificacion}}</td>
+              <td>{{cantidad}}</td>
+
+              <td class="text-end pe-3">
+                <a 
+                  class="icon-btn btn-editar-pegamento"
+                  href="#"
+                  data-id="{{id_pegamento}}"
+                  data-descripcion="{{descripcion}}"
+                  data-especificacion="{{especificacion}}"
+                  data-cantidad="{{cantidad}}"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+
+                <a 
+                  class="icon-btn danger btn-eliminar-pegamento"
+                  href="#"
+                  data-id="{{id_pegamento}}"
+                  title="Eliminar"
+                >
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+          {{/each}}
+        {{else}}
+          <tr>
+            <td colspan="4" class="text-center text-muted py-4">
+              No hay pegamentos para mostrar.
+            </td>
+          </tr>
+        {{/if}}
+      </tbody>
+    </table>
+  </div>
+
+  {{!-- Paginación --}}
+  <div class="d-flex align-items-center justify-content-between mt-3">
+    <div class="text-muted">
+      Mostrando {{mostrando}} de {{total}} pegamentos
+    </div>
+
+    {{#if (gt totalPages 1)}}
+      <nav>
+        <ul class="pagination mb-0">
+          <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+            <a class="page-link" href="/pegamentos?page={{prevPage}}&q={{q}}">Anterior</a>
+          </li>
+
+          {{#each pages}}
+            <li class="page-item {{#if active}}active{{/if}}">
+              <a class="page-link" href="/pegamentos?page={{num}}&q={{../q}}">{{num}}</a>
+            </li>
+          {{/each}}
+
+          <li class="page-item {{#if (eq page totalPages)}}disabled{{/if}}">
+            <a class="page-link" href="/pegamentos?page={{nextPage}}&q={{q}}">Siguiente</a>
+          </li>
+        </ul>
+      </nav>
+    {{/if}}
+  </div>
+
+</section>
+
+{{> pegamentosModal }}
+{{> pegamentosModalEditar }}
+{{> pegamentosModalEliminar }}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* --- ELIMINAR PEGAMENTO --- */
+  const botonesEliminar = document.querySelectorAll(".btn-eliminar-pegamento");
+
+  botonesEliminar.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const id = btn.dataset.id;
+      document.getElementById("delete_id_pegamento").value = id;
+
+      const modal = new bootstrap.Modal(document.getElementById("modalPegamentoEliminar"));
+      modal.show();
+    });
+  });
+
+  /* --- EDITAR PEGAMENTO --- */
+  const botonesEditar = document.querySelectorAll(".btn-editar-pegamento");
+
+  botonesEditar.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const id = btn.dataset.id;
+
+      document.getElementById("edit_id_pegamento").value = id;
+      document.getElementById("edit_descripcion_peg").value = btn.dataset.descripcion;
+      document.getElementById("edit_especificacion_peg").value = btn.dataset.especificacion;
+      document.getElementById("edit_cantidad_peg").value = btn.dataset.cantidad;
+
+      const form = document.getElementById("formEditarPegamento");
+      form.action = `/pegamentos/editar/${id}`;
+
+      const modal = new bootstrap.Modal(document.getElementById("modalEditarPegamento"));
+      modal.show();
+    });
+  });
+
+});
+</script>
