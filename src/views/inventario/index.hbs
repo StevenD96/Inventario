@@ -12,7 +12,8 @@
         type="text" 
         name="q" 
         value="{{q}}" 
-        placeholder="Buscar..."
+        placeholder="{{#if (eq moduloInventario 'Tubería')}}Buscar por descripción o diámetro...{{else}}Buscar...{{/if}}"
+
       />
     </div>
   </form>
@@ -30,8 +31,8 @@
             <th>Diámetro</th>
           {{/if}}
 
-          {{!-- Solo Pegamentos muestra especificación --}}
-          {{#if (eq moduloInventario "Pegamentos")}}
+          {{!-- Pegamentos, Cloro y Medidores muestran Especificación --}}
+          {{#if items.[0].especificacion}}
             <th>Especificación</th>
           {{/if}}
 
@@ -44,7 +45,6 @@
 
         {{#if items.length}}
           {{#each items}}
-
             <tr>
 
               {{!-- Descripción --}}
@@ -55,13 +55,27 @@
                 <td>{{diametro}}</td>
               {{/if}}
 
-              {{!-- Pegamentos --}}
-              {{#if (eq ../moduloInventario "Pegamentos")}}
+              {{!-- Pegamentos, Cloro y Medidores --}}
+              {{#if especificacion}}
                 <td>{{especificacion}}</td>
               {{/if}}
 
-              {{!-- Cantidad --}}
-              <td class="text-center {{#unless (gt cantidad 30)}} text-danger fw-bold {{/unless}}">
+
+              {{!-- Cantidad con reglas por módulo --}}
+              <td class="text-center
+                {{!-- Cloro: rojo si <= 5 --}}
+                {{#if (eq ../moduloInventario "Cloro")}}
+                  {{#unless (gt cantidad 5)}} text-danger fw-bold {{/unless}}
+                {{else}}
+                  {{!-- Medidores: rojo si <= 20 --}}
+                  {{#if (eq ../moduloInventario "Medidores")}}
+                    {{#unless (gt cantidad 20)}} text-danger fw-bold {{/unless}}
+                  {{else}}
+                    {{!-- Resto (Tubería, Pegamentos, etc.): rojo si <= 30 --}}
+                    {{#unless (gt cantidad 30)}} text-danger fw-bold {{/unless}}
+                  {{/if}}
+                {{/if}}
+              ">
                 {{cantidad}}
               </td>
 
@@ -83,7 +97,6 @@
               </td>
 
             </tr>
-
           {{/each}}
         {{else}}
           <tr>
@@ -129,3 +142,4 @@
 </section>
 
 {{> modalSolicitud }}
+ 

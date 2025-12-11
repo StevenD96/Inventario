@@ -54,14 +54,11 @@ export const inventarioTuberia = async (req, res) => {
     res.render("inventario/index", {
       layout: "app",
       title: "Inventario - Tubería PVC",
-
       usuario,
       nombreUsuario: usuario.nombre_completo,
       rolUsuario: usuario.rol,
-
       moduloActivo: "Tubería",
-      moduloInventario: "Tubería",
-
+      moduloInventario: "Tubería", //cambio
       items,
       q,
       page,
@@ -255,6 +252,187 @@ export const inventarioPegamentos = async (req, res) => {
 };
 
 /* =====================================================
+   LISTADO DE INVENTARIO - CLORO
+   ===================================================== */
+export const inventarioCloro = async (req, res) => {
+  try {
+    const usuario = req.session.usuario;
+    if (!usuario) return res.redirect("/");
+
+    const page = Math.max(parseInt(req.query.page || "1"), 1);
+    const q = (req.query.q || "").trim();
+    const offset = (page - 1) * PAGE_SIZE;
+
+    // Llamar SP de Cloro
+    const [result] = await pool.query("CALL sp_cloro_listar(?, ?, ?)", [
+      q,
+      PAGE_SIZE,
+      offset
+    ]);
+
+    const total = result[0][0]?.total || 0;
+    const cloro = result[1] || [];
+
+    const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
+    const pages = Array.from({ length: totalPages }, (_, i) => ({
+      num: i + 1,
+      active: page === i + 1
+    }));
+
+    // Adaptar datos al formato estándar de inventario
+    const items = cloro.map(c => ({
+      id_item: c.id_cloro,
+      descripcion: c.descripcion,
+      especificacion: c.especificacion,
+      cantidad: c.cantidad,
+      categoria: "Cloro"
+    }));
+
+    await registrarBitacora(
+      req,
+      "Inventario",
+      "CONSULTAR",
+      "El usuario consultó el inventario de cloro"
+    );
+
+    let mensaje = null;
+    if (req.query.msg === "ok") {
+      mensaje = { tipo: "success", texto: "Solicitud realizada con éxito" };
+    } else if (req.query.msg === "cantidad") {
+      mensaje = { tipo: "warning", texto: "La cantidad ingresada no es válida" };
+    } else if (req.query.msg === "error") {
+      mensaje = { tipo: "danger", texto: "Error al procesar la solicitud" };
+    }
+
+    res.render("inventario/index", {
+      layout: "app",
+      title: "Inventario - Cloro",
+
+      usuario,
+      nombreUsuario: usuario.nombre_completo,
+      rolUsuario: usuario.rol,
+
+      moduloActivo: "Inventario",
+      moduloInventario: "Cloro",
+
+      items,
+      q,
+      page,
+      total,
+      mostrando: items.length ? Math.min(page * PAGE_SIZE, total) : 0,
+      totalPages,
+      pages,
+      prevPage: Math.max(1, page - 1),
+      nextPage: Math.min(totalPages, page + 1),
+
+      mensaje
+    });
+
+  } catch (err) {
+    console.error("Error listando inventario de cloro:", err);
+    await registrarBitacora(
+      req,
+      "Inventario",
+      "ERROR",
+      `Error al listar inventario de cloro: ${err.message}`
+    );
+    res.status(500).send("Error interno al listar inventario de cloro.");
+  }
+};
+
+/* ===================================================== 
+   LISTADO DE INVENTARIO - MEDIDORES
+   ===================================================== */
+export const inventarioMedidores = async (req, res) => {
+  try {
+    const usuario = req.session.usuario;
+    if (!usuario) return res.redirect("/");
+
+    const page = Math.max(parseInt(req.query.page || "1"), 1);
+    const q = (req.query.q || "").trim();
+    const offset = (page - 1) * PAGE_SIZE;
+
+    // Llamar SP
+    const [result] = await pool.query("CALL sp_medidores_listar(?, ?, ?)", [
+      q,
+      PAGE_SIZE,
+      offset
+    ]);
+
+    const total = result[0][0]?.total || 0;
+    const medidores = result[1] || [];
+
+    const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
+    const pages = Array.from({ length: totalPages }, (_, i) => ({
+      num: i + 1,
+      active: page === i + 1
+    }));
+
+    // Adaptar datos al formato estándar de inventario/index.hbs
+    const items = medidores.map(m => ({
+      id_item: m.id_medidor,
+      descripcion: m.descripcion,
+      especificacion: m.especificacion,
+      cantidad: m.cantidad,
+      categoria: "Medidores"
+    }));
+
+    // Bitácora
+    await registrarBitacora(
+      req,
+      "Inventario",
+      "CONSULTAR",
+      "El usuario consultó el inventario de medidores"
+    );
+
+    // Mensajes
+    let mensaje = null;
+    if (req.query.msg === "ok") {
+      mensaje = { tipo: "success", texto: "Solicitud realizada con éxito" };
+    } else if (req.query.msg === "cantidad") {
+      mensaje = { tipo: "warning", texto: "La cantidad ingresada no es válida" };
+    } else if (req.query.msg === "error") {
+      mensaje = { tipo: "danger", texto: "Error al procesar la solicitud" };
+    }
+
+    res.render("inventario/index", {
+      layout: "app",
+      title: "Inventario - Medidores",
+
+      usuario,
+      nombreUsuario: usuario.nombre_completo,
+      rolUsuario: usuario.rol,
+
+      moduloActivo: "Medidores",
+      moduloInventario: "Medidores",
+
+      items,
+      q,
+      page,
+      total,
+      mostrando: items.length ? Math.min(page * PAGE_SIZE, total) : 0,
+      totalPages,
+      pages,
+      prevPage: Math.max(1, page - 1),
+      nextPage: Math.min(totalPages, page + 1),
+
+      mensaje
+    });
+
+  } catch (err) {
+    console.error("Error listando inventario de Medidores:", err);
+    await registrarBitacora(
+      req,
+      "Inventario",
+      "ERROR",
+      `Error al listar inventario de medidores: ${err.message}`
+    );
+    res.status(500).send("Error interno al listar medidores.");
+  }
+};
+
+
+/* =====================================================
    PROCESAR SOLICITUD (INGRESO / SALIDA)
    ===================================================== */
 export const procesarSolicitud = async (req, res) => {
@@ -352,6 +530,67 @@ export const procesarSolicitud = async (req, res) => {
       descripcionTexto = actual.descripcion ? ` ${actual.descripcion}` : "";
     }
 
+        /* === CLORO === */
+    if (categoria === "Cloro") {
+
+      const [[actual]] = await pool.query(
+        "SELECT cantidad, descripcion, especificacion FROM Cloro WHERE id_cloro = ?",
+        [id_item]
+      );
+
+      if (!actual) throw new Error("Cloro no encontrado");
+
+      // Validación salida
+      if (tipo === "SALIDA" && actual.cantidad < cantidadInt) {
+        await registrarBitacora(
+          req,
+          "Inventario",
+          "ERROR",
+          `Intento de salida (${cantidadInt}) mayor al stock disponible (${actual.cantidad})`
+        );
+        return res.redirect(`/inventario/cloro?msg=cantidad`);
+      }
+
+      const signo = tipo === "INGRESO" ? 1 : -1;
+
+      await pool.query(
+        "UPDATE Cloro SET cantidad = cantidad + ? WHERE id_cloro = ?",
+        [signo * cantidadInt, id_item]
+      );
+
+      descripcionTexto = actual.descripcion ? ` ${actual.descripcion}` : "";
+    }
+
+        /* === MEDIDORES === */
+    if (categoria === "Medidores") {
+
+      const [[actual]] = await pool.query(
+        "SELECT cantidad, descripcion, especificacion FROM Medidores WHERE id_medidor = ?",
+        [id_item]
+      );
+
+      if (!actual) throw new Error("Medidor no encontrado");
+
+      // Validación de salida
+      if (tipo === "SALIDA" && actual.cantidad < cantidadInt) {
+        await registrarBitacora(
+          req,
+          "Inventario",
+          "ERROR",
+          `Intento de salida (${cantidadInt}) mayor al stock disponible (${actual.cantidad})`
+        );
+        return res.redirect(`/inventario/medidores?msg=cantidad`);
+      }
+
+      const signo = tipo === "INGRESO" ? 1 : -1;
+
+      await pool.query(
+        "UPDATE Medidores SET cantidad = cantidad + ? WHERE id_medidor = ?",
+        [signo * cantidadInt, id_item]
+      );
+
+      descripcionTexto = actual.descripcion ? ` ${actual.descripcion}` : "";
+    }
 
     /* === REGISTRAR MOVIMIENTO === */
     await pool.query("CALL sp_registrar_movimiento(?, ?, ?, ?, ?, ?)", [
@@ -372,11 +611,12 @@ export const procesarSolicitud = async (req, res) => {
       `Movimiento de inventario (${categoria}) - ${tipo} de ${cantidadInt}${descripcionTexto}${diametroTexto}. Motivo: ${motivo}`
     );
 
-
     /* === REDIRECCIÓN FINAL (OK) === */
     let rutaOk = "tuberia";
     if (categoria === "Accesorios") rutaOk = "accesorios";
     else if (categoria === "Pegamentos") rutaOk = "pegamentos";
+    else if (categoria === "Cloro") rutaOk = "cloro";
+    else if (categoria === "Medidores") rutaOk = "medidores";
 
     return res.redirect(`/inventario/${rutaOk}?msg=ok`);
 
@@ -390,6 +630,10 @@ export const procesarSolicitud = async (req, res) => {
     let rutaError = "tuberia";
     if (categoriaBody === "Accesorios") rutaError = "accesorios";
     else if (categoriaBody === "Pegamentos") rutaError = "pegamentos";
+    else if (categoriaBody === "Cloro") rutaError = "cloro";
+    else if (categoriaBody === "Medidores") rutaError = "medidores";
+
+
 
     await registrarBitacora(
       req,

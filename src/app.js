@@ -14,7 +14,8 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 import tuberiaRoutes from "./routes/tuberiaRoutes.js"; //Ruta para tuberias
 import accesoriosRoutes from "./routes/accesoriosRoutes.js"; //Ruta para accesorios
 import pegamentosRoutes from "./routes/pegamentosRoutes.js"; //Ruta para pegamentos
-
+import cloroRoutes from "./routes/cloroRoutes.js"; //Ruta para cloro
+import medidoresRoutes from "./routes/medidoresRoutes.js"; //Ruta medidores
 import { handlebarsHelpers } from "./utils/handlebarsHelpers.js";
 import inventarioRoutes from "./routes/inventarioRoutes.js";
 
@@ -77,7 +78,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // Rutas — orden correcto
 app.use("/", authRoutes);              // LOGIN primero
 app.use("/usuarios", userRoutes);      // usuarios
@@ -85,9 +85,10 @@ app.use("/bitacora", bitacoraRoutes);  // bitácora
 app.use("/tuberia", tuberiaRoutes);    // tubería
 app.use("/accesorios", accesoriosRoutes); //accesorios
 app.use("/pegamentos", pegamentosRoutes);//pegamentos
+app.use("/cloro", cloroRoutes);//cloro
+app.use("/medidores", medidoresRoutes);
 app.use("/inventario", inventarioRoutes); //inventario
 app.use("/dashboard", dashboardRoutes); // dashboard al final y con prefijo
-
 
 const PORT = process.env.PORT || 3010;
 app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));

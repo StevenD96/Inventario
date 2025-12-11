@@ -1,0 +1,34 @@
+<!-- Modal Eliminar Medidor -->
+<div class="modal fade" id="modalMedidorEliminar" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content usuarios-modal">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title">
+          <i class="bi bi-trash text-danger me-2"></i>
+          Confirmar eliminación
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <p>¿Estás seguro de que deseas eliminar este medidor?</p>
+        <p class="text-danger small">Esto solo lo marcará como <strong>Inactivo</strong>.</p>
+
+        <form method="POST" action="/medidores/eliminar">
+          <input type="hidden" name="id_medidor" id="delete_id_medidor">
+
+          <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger ms-2">
+              <i class="bi bi-trash me-1"></i> Eliminar
+            </button>
+          </div>
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>

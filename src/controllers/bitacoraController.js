@@ -83,6 +83,9 @@ export const listarBitacora = async (req, res) => {
       { value: "Usuarios", name: "Usuarios" },
       { value: "Accesorios", name: "Accesorios" },  
       { value: "Tuberia", name: "Tubería" },
+      { value: "Pegamentos", name: "Pegamentos" },
+      { value: "Cloro", name: "Cloro" },
+
       { value: "Inventario", name: "Inventario" }
       //{ value: "Sistema", name: "Sistema" },
     ];
