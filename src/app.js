@@ -16,7 +16,8 @@ import accesoriosRoutes from "./routes/accesoriosRoutes.js"; //Ruta para accesor
 import pegamentosRoutes from "./routes/pegamentosRoutes.js"; //Ruta para pegamentos
 import cloroRoutes from "./routes/cloroRoutes.js"; //Ruta para cloro
 import medidoresRoutes from "./routes/medidoresRoutes.js"; //Ruta medidores
-import herramientasRoutes from "./routes/herramientasRoutes.js";
+import herramientasRoutes from "./routes/herramientasRoutes.js"; //Ruta herramientas
+import limpiezaRoutes from "./routes/limpiezaRoutes.js"; //Ruta para limpieza
 import { handlebarsHelpers } from "./utils/handlebarsHelpers.js";
 import inventarioRoutes from "./routes/inventarioRoutes.js";
 
@@ -89,6 +90,7 @@ app.use("/pegamentos", pegamentosRoutes);//pegamentos
 app.use("/cloro", cloroRoutes);//cloro
 app.use("/medidores", medidoresRoutes); //medidores
 app.use("/herramientas", herramientasRoutes); //herramientas
+app.use("/limpieza", limpiezaRoutes); //herramientas
 app.use("/inventario", inventarioRoutes); //inventario
 app.use("/dashboard", dashboardRoutes); // dashboard al final y con prefijo
 

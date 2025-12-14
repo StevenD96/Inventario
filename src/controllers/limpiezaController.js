@@ -6,3 +6,174 @@ const PAGE_SIZE = 10;
 // =====================================
 //  LISTAR LIMPIEZA (con SP)
 // =====================================
+export const listarLimpieza = async (req, res) => {
+  try {
+    const usuario = req.session.usuario;
+    if (!usuario) return res.redirect("/");
+
+    const page = Math.max(parseInt(req.query.page || "1", 10), 1);
+    const q = (req.query.q || "").trim();
+    const offset = (page - 1) * PAGE_SIZE;
+
+    const [result] = await pool.query("CALL sp_limpieza_listar(?, ?, ?)", [
+      q,
+      PAGE_SIZE,
+      offset
+    ]);
+
+    const total = result[0][0]?.total || 0;
+    const limpieza = result[1] || [];
+
+    const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
+    const pages = Array.from({ length: totalPages }, (_, i) => ({
+      num: i + 1,
+      active: page === i + 1
+    }));
+
+    await registrarBitacora(
+      req,
+      "Limpieza",
+      "CONSULTAR",
+      "El usuario consultó el listado de limpieza"
+    );
+
+    res.render("limpieza/index", {
+      layout: "app",
+      title: "Limpieza",
+      usuario,
+      nombreUsuario: usuario.nombre_completo,
+      rolUsuario: usuario.rol,
+      moduloActivo: "Limpieza",
+      moduloInventario: null,
+      limpieza,
+      q,
+      page,
+      total,
+      mostrando: limpieza.length ? Math.min(page * PAGE_SIZE, total) : 0,
+      totalPages,
+      pages,
+      prevPage: Math.max(1, page - 1),
+      nextPage: Math.min(totalPages, page + 1),
+      add: req.query.add,
+      edit: req.query.edit,
+      delete: req.query.delete,
+      error: req.query.error
+    });
+  } catch (err) {
+    console.error("Error listando limpieza:", err);
+    await registrarBitacora(req, "Limpieza", "ERROR", err.message);
+    res.status(500).send("Error interno al listar limpieza.");
+  }
+};
+
+// =====================================
+//  CREAR LIMPIEZA
+// =====================================
+export const crearLimpieza = async (req, res) => {
+  try {
+    const usuario = req.session.usuario;
+    if (!usuario) return res.redirect("/");
+
+    const { descripcion, cantidad } = req.body;
+    const cantInt = parseInt(cantidad, 10) || 0;
+
+    await pool.query(
+      `INSERT INTO Limpieza (descripcion, cantidad, estado)
+       VALUES (?, ?, 'Activo')`,
+      [descripcion.trim(), cantInt]
+    );
+
+    await registrarBitacora(
+      req,
+      "Limpieza",
+      "CREAR",
+      `Se creó el producto de limpieza: ${descripcion.trim()}`
+    );
+
+    res.redirect("/limpieza?add=1");
+  } catch (err) {
+    console.error("Error creando limpieza:", err);
+    await registrarBitacora(req, "Limpieza", "ERROR", err.message);
+    res.redirect("/limpieza?error=1");
+  }
+};
+
+// =====================================
+//  EDITAR LIMPIEZA
+// =====================================
+export const editarLimpieza = async (req, res) => {
+  try {
+    const usuario = req.session.usuario;
+    if (!usuario) return res.redirect("/");
+
+    const id_limpieza = req.params.id_limpieza || req.body.id_limpieza;
+    const { descripcion, cantidad } = req.body;
+    const cantNueva = parseInt(cantidad, 10) || 0;
+
+    const [[actual]] = await pool.query(
+      `SELECT descripcion, cantidad
+       FROM Limpieza
+       WHERE id_limpieza = ?`,
+      [id_limpieza]
+    );
+
+    if (!actual) return res.redirect("/limpieza?error=1");
+
+    await pool.query(
+      `UPDATE Limpieza
+       SET descripcion = ?, cantidad = ?
+       WHERE id_limpieza = ?`,
+      [descripcion.trim(), cantNueva, id_limpieza]
+    );
+
+    await registrarBitacora(
+      req,
+      "Limpieza",
+      "EDITAR",
+      `Producto de limpieza editado: ${descripcion.trim()}`
+    );
+
+    res.redirect("/limpieza?edit=1");
+  } catch (err) {
+    console.error("Error editando limpieza:", err);
+    await registrarBitacora(req, "Limpieza", "ERROR", err.message);
+    res.redirect("/limpieza?error=1");
+  }
+};
+
+// =====================================
+//  ELIMINAR LIMPIEZA (estado = Inactivo)
+// =====================================
+export const eliminarLimpieza = async (req, res) => {
+  try {
+    const usuario = req.session.usuario;
+    if (!usuario) return res.redirect("/");
+
+    const { id_limpieza } = req.body;
+
+    const [[row]] = await pool.query(
+      `SELECT descripcion FROM Limpieza WHERE id_limpieza = ?`,
+      [id_limpieza]
+    );
+
+    if (!row) return res.redirect("/limpieza?error=1");
+
+    await pool.query(
+      `UPDATE Limpieza SET estado = 'Inactivo' WHERE id_limpieza = ?`,
+      [id_limpieza]
+    );
+
+    await registrarBitacora(
+      req,
+      "Limpieza",
+      "ELIMINAR",
+      `Producto de limpieza eliminado: ${row.descripcion}`
+    );
+
+    res.redirect("/limpieza?delete=1");
+  } catch (err) {
+    console.error("Error eliminando limpieza:", err);
+    await registrarBitacora(req, "Limpieza", "ERROR", err.message);
+    res.redirect("/limpieza?error=1");
+  }
+};

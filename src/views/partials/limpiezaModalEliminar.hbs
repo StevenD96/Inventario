@@ -1,0 +1,27 @@
+<div class="modal fade" id="modalEliminarLimpieza" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content usuarios-modal">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-danger">Confirmar eliminación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <p>¿Deseas eliminar este producto de limpieza?</p>
+
+        <form method="POST" action="/limpieza/eliminar">
+          <input type="hidden" id="delete_id_limpieza" name="id_limpieza">
+
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-trash me-1"></i> Eliminar
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

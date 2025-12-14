@@ -79,15 +79,16 @@ export const listarBitacora = async (req, res) => {
     // Módulos disponibles de la bitácora
     const modulos = [
       { value: "Todos", name: "Todos" },
+      { value: "Inventario", name: "Inventario" },
       { value: "Login", name: "Login" },
       { value: "Usuarios", name: "Usuarios" },
       { value: "Accesorios", name: "Accesorios" },  
-      { value: "Tuberia", name: "Tubería" },
-      { value: "Pegamentos", name: "Pegamentos" },
       { value: "Cloro", name: "Cloro" },
-
-      { value: "Inventario", name: "Inventario" }
-      //{ value: "Sistema", name: "Sistema" },
+      { value: "Herramientas", name: "Herramientas" },
+      { value: "Limpieza", name: "Limpieza" },
+      { value: "Medidores", name: "Medidores" },
+      { value: "Pegamentos", name: "Pegamentos" },
+      { value: "Tuberia", name: "Tubería" }
     ];
 
     res.render("bitacora/index", {

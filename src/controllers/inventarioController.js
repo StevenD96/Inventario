@@ -505,6 +505,96 @@ export const inventarioMedidores = async (req, res) => {
 };
 
 /* =====================================================
+   LISTADO DE INVENTARIO - LIMPIEZA
+   ===================================================== */
+export const inventarioLimpieza = async (req, res) => {
+  try {
+    const usuario = req.session.usuario;
+    if (!usuario) return res.redirect("/");
+
+    const page = Math.max(parseInt(req.query.page || "1", 10), 1);
+    const q = (req.query.q || "").trim();
+    const offset = (page - 1) * PAGE_SIZE;
+
+    // SP Limpieza
+    const [result] = await pool.query(
+      "CALL sp_limpieza_listar(?, ?, ?)",
+      [q, PAGE_SIZE, offset]
+    );
+
+    const total = result[0][0]?.total || 0;
+    const limpieza = result[1] || [];
+
+    const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
+    const pages = Array.from({ length: totalPages }, (_, i) => ({
+      num: i + 1,
+      active: page === i + 1
+    }));
+
+    // Normalizar datos para la vista
+    const items = limpieza.map(l => ({
+      id_item: l.id_limpieza,
+      descripcion: l.descripcion,
+      cantidad: l.cantidad,
+      categoria: "Limpieza"
+    }));
+
+    await registrarBitacora(
+      req,
+      "Inventario",
+      "CONSULTAR",
+      "El usuario consultó el inventario de limpieza"
+    );
+
+    let mensaje = null;
+    if (req.query.msg === "ok") {
+      mensaje = { tipo: "success", texto: "Solicitud realizada con éxito" };
+    } else if (req.query.msg === "cantidad") {
+      mensaje = { tipo: "warning", texto: "La cantidad ingresada no es válida" };
+    } else if (req.query.msg === "error") {
+      mensaje = { tipo: "danger", texto: "Error al procesar la solicitud" };
+    }
+
+    res.render("inventario/limpieza", {
+      layout: "app",
+      title: "Inventario - Limpieza",
+
+      usuario,
+      nombreUsuario: usuario.nombre_completo,
+      rolUsuario: usuario.rol,
+
+      moduloActivo: "Inventario",
+      moduloInventario: "Limpieza",
+
+      items,
+      q,
+      page,
+      total,
+      mostrando: items.length ? Math.min(page * PAGE_SIZE, total) : 0,
+      totalPages,
+      pages,
+      prevPage: Math.max(1, page - 1),
+      nextPage: Math.min(totalPages, page + 1),
+
+      mensaje
+    });
+
+  } catch (err) {
+    console.error("Error listando inventario de limpieza:", err);
+
+    await registrarBitacora(
+      req,
+      "Inventario",
+      "ERROR",
+      `Error al listar inventario de limpieza: ${err.message}`
+    );
+
+    res.status(500).send("Error interno al listar inventario de limpieza.");
+  }
+};
+
+
+/* =====================================================
    PROCESAR SOLICITUD (INGRESO / SALIDA)
    ===================================================== */
 export const procesarSolicitud = async (req, res) => {
@@ -722,6 +812,8 @@ export const procesarSolicitud = async (req, res) => {
     else if (categoria === "Cloro") rutaOk = "cloro";
     else if (categoria === "Medidores") rutaOk = "medidores";
     else if (categoria === "Herramientas") rutaOk = "herramientas";
+    else if (categoria === "Limpieza") rutaOk = "limpieza";
+
 
     return res.redirect(`/inventario/${rutaOk}?msg=ok`); //cambio
 
@@ -737,6 +829,8 @@ export const procesarSolicitud = async (req, res) => {
     else if (categoriaBody === "Cloro") rutaError = "cloro";
     else if (categoriaBody === "Medidores") rutaError = "medidores";
     else if (categoriaBody === "Herramientas") rutaError = "herramientas";
+    else if (categoriaBody === "Limpieza") rutaError = "limpieza";
+
 
 
     await registrarBitacora(
