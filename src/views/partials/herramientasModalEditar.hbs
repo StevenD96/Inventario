@@ -1,0 +1,84 @@
+<!-- Modal Editar Herramienta -->
+<div class="modal fade" id="modalEditarHerramienta" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content usuarios-modal">
+
+      <div class="modal-header border-0">
+        <div class="d-flex align-items-center gap-2">
+          <div class="icono-modal bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-pencil-square fs-4"></i>
+          </div>
+          <h5 class="modal-title fw-semibold">Editar Herramienta</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form action="/herramientas/editar" method="POST" id="formEditarHerramienta" class="usuarios-form">
+
+          <input type="hidden" name="id_herramienta" id="edit_id_herramienta">
+
+          <!-- Descripción -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Descripción</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-card-text"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control border-start-0" 
+                id="edit_descripcion_herr" 
+                name="descripcion" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Especificación -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Especificación</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-tag"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control border-start-0" 
+                id="edit_especificacion_herr" 
+                name="especificacion"
+              >
+            </div>
+          </div>
+
+          <!-- Cantidad -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Cantidad</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-123"></i>
+              </span>
+              <input 
+                type="number" 
+                class="form-control border-start-0" 
+                id="edit_cantidad_herr" 
+                name="cantidad" 
+                min="0" 
+                required
+              >
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-circle me-1"></i> Guardar Cambios
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

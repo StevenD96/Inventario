@@ -18,6 +18,9 @@ import { inventarioCloro } from "../controllers/inventarioController.js";
 //Inventario de Medicamentos
 import { inventarioMedidores } from "../controllers/inventarioController.js";
 
+//Inventario de Herramientas
+import { inventarioHerramientas } from "../controllers/inventarioController.js";
+
 const router = express.Router();
 
 // Inventario de Tubería
@@ -34,6 +37,10 @@ router.get("/cloro", verificarSesion, inventarioCloro);
 
 //Inventario de Medidores
 router.get("/medidores", verificarSesion, inventarioMedidores);
+
+
+//Inventario de Herramientas
+router.get("/herramientas", verificarSesion, inventarioHerramientas);
 
 // Procesar movimientos (Ingreso / Salida) desde el modal
 router.post("/solicitud", verificarSesion, procesarSolicitud);

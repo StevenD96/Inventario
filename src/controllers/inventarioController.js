@@ -80,8 +80,9 @@ export const inventarioTuberia = async (req, res) => {
       `Error al listar inventario de tubería: ${err.message}`
     );
     res.status(500).send("Error interno al listar inventario.");
-  }
+  } 
 };
+
 
 /* =====================================================
    LISTADO DE INVENTARIO - ACCESORIOS
@@ -215,7 +216,7 @@ export const inventarioPegamentos = async (req, res) => {
       mensaje = { tipo: "danger", texto: "Error al procesar la solicitud" };
     }
 
-    res.render("inventario/index", {
+    res.render("inventario/pegamentos", {
       layout: "app",
       title: "Inventario - Pegamentos",
 
@@ -304,14 +305,12 @@ export const inventarioCloro = async (req, res) => {
       mensaje = { tipo: "danger", texto: "Error al procesar la solicitud" };
     }
 
-    res.render("inventario/index", {
+    res.render("inventario/cloro", {
       layout: "app",
       title: "Inventario - Cloro",
-
       usuario,
       nombreUsuario: usuario.nombre_completo,
       rolUsuario: usuario.rol,
-
       moduloActivo: "Inventario",
       moduloInventario: "Cloro",
 
@@ -395,17 +394,14 @@ export const inventarioMedidores = async (req, res) => {
       mensaje = { tipo: "danger", texto: "Error al procesar la solicitud" };
     }
 
-    res.render("inventario/index", {
+    res.render("inventario/medidores", {
       layout: "app",
       title: "Inventario - Medidores",
-
       usuario,
       nombreUsuario: usuario.nombre_completo,
       rolUsuario: usuario.rol,
-
       moduloActivo: "Medidores",
       moduloInventario: "Medidores",
-
       items,
       q,
       page,
@@ -415,10 +411,8 @@ export const inventarioMedidores = async (req, res) => {
       pages,
       prevPage: Math.max(1, page - 1),
       nextPage: Math.min(totalPages, page + 1),
-
       mensaje
     });
-
   } catch (err) {
     console.error("Error listando inventario de Medidores:", err);
     await registrarBitacora(
@@ -431,6 +425,84 @@ export const inventarioMedidores = async (req, res) => {
   }
 };
 
+/* ===================================================== 
+   LISTADO DE INVENTARIO - Herramientas
+   ===================================================== */
+   export const inventarioHerramientas = async (req, res) => {
+  try {
+    const usuario = req.session.usuario;
+    if (!usuario) return res.redirect("/");
+
+    const page = Math.max(parseInt(req.query.page || "1"), 1);
+    const q = (req.query.q || "").trim();
+    const offset = (page - 1) * PAGE_SIZE;
+
+    const [result] = await pool.query("CALL sp_herramientas_listar(?, ?, ?)", [
+      q,
+      PAGE_SIZE,
+      offset
+    ]);
+
+    const total = result[0][0]?.total || 0;
+    const herramientas = result[1] || [];
+
+    const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
+    const pages = Array.from({ length: totalPages }, (_, i) => ({
+      num: i + 1,
+      active: page === i + 1
+    }));
+
+    const items = herramientas.map(h => ({
+      id_item: h.id_herramienta,
+      descripcion: h.descripcion,
+      especificacion: h.especificacion,
+      cantidad: h.cantidad,
+      categoria: "Herramientas"
+    }));
+
+    await registrarBitacora(
+      req,
+      "Inventario",
+      "CONSULTAR",
+      "El usuario consultó el inventario de herramientas"
+    );
+
+    let mensaje = null;
+    if (req.query.msg === "ok") mensaje = { tipo: "success", texto: "Solicitud realizada con éxito" };
+    else if (req.query.msg === "cantidad") mensaje = { tipo: "warning", texto: "La cantidad ingresada no es válida" };
+    else if (req.query.msg === "error") mensaje = { tipo: "danger", texto: "Error al procesar la solicitud" };
+
+    res.render("inventario/herramientas", {
+      layout: "app",
+      title: "Inventario - Herramientas",
+      usuario,
+      nombreUsuario: usuario.nombre_completo,
+      rolUsuario: usuario.rol,
+      moduloActivo: "Herramientas",
+      moduloInventario: "Herramientas",
+      items,
+      q,
+      page,
+      total,
+      mostrando: items.length ? Math.min(page * PAGE_SIZE, total) : 0,
+      totalPages,
+      pages,
+      prevPage: Math.max(1, page - 1),
+      nextPage: Math.min(totalPages, page + 1),
+      mensaje
+    });
+
+  } catch (err) {
+    console.error("Error listando inventario de herramientas:", err);
+    await registrarBitacora(
+      req,
+      "Inventario",
+      "ERROR",
+      `Error al listar inventario de herramientas: ${err.message}`
+    );
+    res.status(500).send("Error interno al listar herramientas.");
+  }
+};
 
 /* =====================================================
    PROCESAR SOLICITUD (INGRESO / SALIDA)
@@ -592,6 +664,38 @@ export const procesarSolicitud = async (req, res) => {
       descripcionTexto = actual.descripcion ? ` ${actual.descripcion}` : "";
     }
 
+     /* === HERRAMIENTAS=== */
+    if (categoria === "Herramientas") {
+
+      const [[actual]] = await pool.query(
+        "SELECT cantidad, descripcion, especificacion FROM Herramientas WHERE id_herramienta = ?",
+        [id_item]
+      );
+
+      if (!actual) throw new Error("Herramienta no encontrada");
+
+      // Validación de salida
+      if (tipo === "SALIDA" && actual.cantidad < cantidadInt) {
+        await registrarBitacora(
+          req,
+          "Inventario",
+          "ERROR",
+          `Intento de salida (${cantidadInt}) mayor al stock disponible (${actual.cantidad})`
+        );
+        return res.redirect(`/inventario/herramientas?msg=cantidad`);
+      }
+
+      const signo = tipo === "INGRESO" ? 1 : -1;
+
+      await pool.query(
+        "UPDATE Herramientas SET cantidad = cantidad + ? WHERE id_herramienta = ?",
+        [signo * cantidadInt, id_item]
+      );
+
+      descripcionTexto = actual.descripcion ? ` ${actual.descripcion}` : "";
+    }
+
+
     /* === REGISTRAR MOVIMIENTO === */
     await pool.query("CALL sp_registrar_movimiento(?, ?, ?, ?, ?, ?)", [
       usuario.id_usuario,
@@ -617,9 +721,9 @@ export const procesarSolicitud = async (req, res) => {
     else if (categoria === "Pegamentos") rutaOk = "pegamentos";
     else if (categoria === "Cloro") rutaOk = "cloro";
     else if (categoria === "Medidores") rutaOk = "medidores";
+    else if (categoria === "Herramientas") rutaOk = "herramientas";
 
-    return res.redirect(`/inventario/${rutaOk}?msg=ok`);
-
+    return res.redirect(`/inventario/${rutaOk}?msg=ok`); //cambio
 
   } catch (err) {
     console.error("Error procesando solicitud:", err);
@@ -632,7 +736,7 @@ export const procesarSolicitud = async (req, res) => {
     else if (categoriaBody === "Pegamentos") rutaError = "pegamentos";
     else if (categoriaBody === "Cloro") rutaError = "cloro";
     else if (categoriaBody === "Medidores") rutaError = "medidores";
-
+    else if (categoriaBody === "Herramientas") rutaError = "herramientas";
 
 
     await registrarBitacora(

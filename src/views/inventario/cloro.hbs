@@ -1,11 +1,11 @@
 <section class="container-fluid users-wrapper">
 
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <h1 class="page-title">Inventario - Pegamentos</h1>
+    <h1 class="page-title">Inventario - Cloro</h1>
   </div>
 
   {{!-- Buscador --}}
-  <form class="mb-3" method="get" action="/inventario/pegamentos">
+  <form class="mb-3" method="get" action="/inventario/cloro">
     <div class="searchbar">
       <i class="bi bi-search"></i>
       <input 
@@ -38,15 +38,13 @@
               <td class="text-center {{#unless (gt cantidad 20)}} text-danger fw-bold {{/unless}}">
                 {{cantidad}}
               </td>
-
-
               <td class="text-end pe-3">
                 <button 
                   class="btn btn-sm btn-primary rounded-pill px-3 btn-solicitud" 
                   data-id="{{id_item}}"
                   data-descripcion="{{descripcion}}"
                   data-cantidad="{{cantidad}}"
-                  data-categoria="Pegamentos"
+                  data-categoria="Cloro"
                   data-bs-toggle="modal"      
                   data-bs-target="#modalSolicitud">
                   <i class="bi bi-arrow-left-right me-1"></i> Solicitud
@@ -57,7 +55,7 @@
         {{else}}
           <tr>
             <td colspan="6" class="text-center text-muted py-4">
-              No hay pegamentos para mostrar.
+              No hay cloro para mostrar.
             </td>
           </tr>
         {{/if}}

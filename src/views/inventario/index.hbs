@@ -1,112 +1,74 @@
 <section class="container-fluid users-wrapper">
 
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <h1 class="page-title">Inventario - {{moduloInventario}}</h1>
+    <h1 class="page-title">Inventario - Tubería PVC</h1>
   </div>
 
-  {{!-- Buscador dinámico --}}
-  <form class="mb-3" method="get" action="/inventario/{{moduloInventario}}">
+  {{!-- Buscador --}}
+  <form class="mb-3" method="get" action="/inventario/Tubería">
     <div class="searchbar">
       <i class="bi bi-search"></i>
       <input 
         type="text" 
         name="q" 
         value="{{q}}" 
-        placeholder="{{#if (eq moduloInventario 'Tubería')}}Buscar por descripción o diámetro...{{else}}Buscar...{{/if}}"
-
+        placeholder="Buscar por descripción o diámetro..."
       />
     </div>
   </form>
 
-  {{!-- Tabla dinámica --}}
+  {{!-- Tabla --}}
   <div class="table-responsive users-card">
     <table class="table align-middle mb-0">
 
       <thead>
         <tr>
           <th>Descripción</th>
-
-          {{!-- Solo Tubería muestra diámetro --}}
-          {{#if (eq moduloInventario "Tubería")}}
-            <th>Diámetro</th>
-          {{/if}}
-
-          {{!-- Pegamentos, Cloro y Medidores muestran Especificación --}}
-          {{#if items.[0].especificacion}}
-            <th>Especificación</th>
-          {{/if}}
-
+          <th>Diámetro</th>
+          <th>Especificación</th>
           <th class="text-center">Cantidad</th>
           <th class="text-end">Solicitud</th>
         </tr>
       </thead>
 
       <tbody>
-
         {{#if items.length}}
           {{#each items}}
-            <tr>
+          <tr>
+            <td>{{descripcion}}</td>
+            <td>{{diametro}}</td>
+            <td>{{especificacion}}</td>
 
-              {{!-- Descripción --}}
-              <td>{{descripcion}}</td>
+            <td class="text-center {{#unless (gt cantidad 30)}} text-danger fw-bold {{/unless}}">
+              {{cantidad}}
+            </td>
 
-              {{!-- Tubería --}}
-              {{#if (eq ../moduloInventario "Tubería")}}
-                <td>{{diametro}}</td>
-              {{/if}}
-
-              {{!-- Pegamentos, Cloro y Medidores --}}
-              {{#if especificacion}}
-                <td>{{especificacion}}</td>
-              {{/if}}
-
-
-              {{!-- Cantidad con reglas por módulo --}}
-              <td class="text-center
-                {{!-- Cloro: rojo si <= 5 --}}
-                {{#if (eq ../moduloInventario "Cloro")}}
-                  {{#unless (gt cantidad 5)}} text-danger fw-bold {{/unless}}
-                {{else}}
-                  {{!-- Medidores: rojo si <= 20 --}}
-                  {{#if (eq ../moduloInventario "Medidores")}}
-                    {{#unless (gt cantidad 20)}} text-danger fw-bold {{/unless}}
-                  {{else}}
-                    {{!-- Resto (Tubería, Pegamentos, etc.): rojo si <= 30 --}}
-                    {{#unless (gt cantidad 30)}} text-danger fw-bold {{/unless}}
-                  {{/if}}
-                {{/if}}
-              ">
-                {{cantidad}}
-              </td>
-
-              {{!-- Botón de solicitud --}}
-              <td class="text-end pe-3">
-                <button 
-                  class="btn btn-sm btn-primary rounded-pill px-3 btn-solicitud" 
-                  data-id="{{id_item}}"
-                  data-descripcion="{{descripcion}}"
-                  data-cantidad="{{cantidad}}"
-                  data-diametro="{{diametro}}"
-                  data-especificacion="{{especificacion}}"
-                  data-categoria="{{categoria}}"
-                  data-bs-toggle="modal"
-                  data-bs-target="#modalSolicitud"
-                >
-                  <i class="bi bi-arrow-left-right me-1"></i> Solicitud
-                </button>
-              </td>
-
-            </tr>
+            <td class="text-end pe-3">
+              <button 
+                class="btn btn-sm btn-primary rounded-pill px-3 btn-solicitud"
+                data-id="{{id_item}}"
+                data-descripcion="{{descripcion}}"
+                data-cantidad="{{cantidad}}"
+                data-diametro="{{diametro}}"
+                data-especificacion="{{especificacion}}"
+                data-categoria="Tubería"
+                data-bs-toggle="modal"
+                data-bs-target="#modalSolicitud"
+              >
+                <i class="bi bi-arrow-left-right me-1"></i> Solicitud
+              </button>
+            </td>
+          </tr>
           {{/each}}
         {{else}}
           <tr>
             <td colspan="5" class="text-center text-muted py-4">
-              No hay materiales para mostrar.
+              No hay tuberías para mostrar.
             </td>
           </tr>
         {{/if}}
-
       </tbody>
+
     </table>
   </div>
 
@@ -117,29 +79,28 @@
     </div>
 
     {{#if (gt totalPages 1)}}
-      <nav>
-        <ul class="pagination mb-0">
+    <nav>
+      <ul class="pagination mb-0">
 
-          <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
-            <a class="page-link" href="?page={{prevPage}}&q={{q}}">Anterior</a>
+        <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+          <a class="page-link" href="?page={{prevPage}}&q={{q}}">Anterior</a>
+        </li>
+
+        {{#each pages}}
+          <li class="page-item {{#if active}}active{{/if}}">
+            <a class="page-link" href="?page={{num}}&q={{../q}}">{{num}}</a>
           </li>
+        {{/each}}
 
-          {{#each pages}}
-            <li class="page-item {{#if active}}active{{/if}}">
-              <a class="page-link" href="?page={{num}}&q={{../q}}">{{num}}</a>
-            </li>
-          {{/each}}
+        <li class="page-item {{#if (eq page totalPages)}}disabled{{/if}}">
+          <a class="page-link" href="?page={{nextPage}}&q={{q}}">Siguiente</a>
+        </li>
 
-          <li class="page-item {{#if (eq page totalPages)}}disabled{{/if}}">
-            <a class="page-link" href="?page={{nextPage}}&q={{q}}">Siguiente</a>
-          </li>
-
-        </ul>
-      </nav>
+      </ul>
+    </nav>
     {{/if}}
   </div>
 
 </section>
 
 {{> modalSolicitud }}
- 
