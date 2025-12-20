@@ -35,7 +35,7 @@ export const listarMedidores = async (req, res) => {
       req,
       "Medidores",
       "CONSULTAR",
-      "El usuario consultó el listado de medidores"
+      "El usuario consultó el listado de medidores."
     );
 
     res.render("Medidores/index", {
@@ -55,10 +55,10 @@ export const listarMedidores = async (req, res) => {
       mostrando: medidores.length ? Math.min(page * PAGE_SIZE, total) : 0,
       totalPages,
       pages,
-
       add: req.query.add,
       edit: req.query.edit,
       delete: req.query.delete,
+      existe: req.query.existe,
       error: req.query.error
     });
 
@@ -78,20 +78,38 @@ export const crearMedidor = async (req, res) => {
     if (!usuario) return res.redirect("/");
 
     const { descripcion, especificacion, cantidad } = req.body;
-
+    const desc = descripcion.trim();
+    const espec = (especificacion || "").trim();
     const cantInt = parseInt(cantidad, 10) || 0;
 
+    // Validar duplicado
+    const [dup] = await pool.query(
+      `SELECT id_medidor
+       FROM Medidores
+       WHERE descripcion = ?
+         AND especificacion = ?
+         AND estado <> 'Inactivo'
+       LIMIT 1`,
+      [desc, espec]
+    );
+
+    if (dup.length) {
+      return res.redirect("/medidores?existe=1");
+    }
+
+    // Insertar
     await pool.query(
       `INSERT INTO Medidores (descripcion, especificacion, cantidad, estado)
        VALUES (?, ?, ?, 'Activo')`,
-      [descripcion.trim(), (especificacion || "").trim(), cantInt]
+      [desc, espec, cantInt]
     );
 
+    // Bitácora
     await registrarBitacora(
       req,
       "Medidores",
       "CREAR",
-      `Se creó material: ${descripcion.trim()}.`
+      `Se creó material: ${desc}.`
     );
 
     res.redirect("/medidores?add=1");
@@ -102,6 +120,7 @@ export const crearMedidor = async (req, res) => {
     res.redirect("/medidores?error=1");
   }
 };
+
 
 // ==============================
 // EDITAR

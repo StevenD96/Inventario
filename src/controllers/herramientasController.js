@@ -45,7 +45,6 @@ export const listarHerramientas = async (req, res) => {
       rolUsuario: usuario.rol,
       moduloActivo: "Herramientas",
       moduloInventario: null,
-
       herramientas: rows,
       q,
       page,
@@ -55,10 +54,10 @@ export const listarHerramientas = async (req, res) => {
       pages,
       prevPage: Math.max(1, page - 1),
       nextPage: Math.min(totalPages, page + 1),
-
       add:    req.query.add,
       edit:   req.query.edit,
       delete: req.query.delete,
+      existe: req.query.existe,
       error:  req.query.error
     });
 
@@ -68,7 +67,6 @@ export const listarHerramientas = async (req, res) => {
     res.status(500).send("Error interno al listar herramientas.");
   }
 };
-
 // =====================================
 //  CREAR HERRAMIENTA
 // =====================================
@@ -78,23 +76,40 @@ export const crearHerramienta = async (req, res) => {
     if (!usuario) return res.redirect("/");
 
     const { descripcion, especificacion, cantidad } = req.body;
+    const desc = descripcion.trim();
+    const espec = (especificacion || "").trim();
     const cantInt = parseInt(cantidad, 10) || 0;
 
+    // VALIDAR DUPLICADO (MISMO PATRÓN QUE ACCESORIOS)
+    const [dup] = await pool.query(
+      `SELECT id_herramienta
+       FROM Herramientas
+       WHERE descripcion = ?
+         AND especificacion = ?
+         AND estado <> 'Inactivo'
+       LIMIT 1`,
+      [desc, espec]
+    );
+
+    if (dup.length) {
+      return res.redirect("/herramientas?existe=1");
+    }
+
+    // INSERTAR
     await pool.query(
       `INSERT INTO Herramientas (descripcion, especificacion, cantidad, estado)
        VALUES (?, ?, ?, 'Activo')`,
-      [descripcion.trim(), (especificacion || "").trim(), cantInt]
+      [desc, espec, cantInt]
     );
 
-    const especTexto = especificacion
-      ? `, Especificación ${especificacion.trim()}`
-      : "";
+    //BITÁCORA
+    const especTexto = espec ? `, Especificación ${espec}` : "";
 
     await registrarBitacora(
       req,
       "Herramientas",
       "CREAR",
-      `Se creó material: ${descripcion.trim()}${especTexto}.`
+      `Se creó material: ${desc}${especTexto}.`
     );
 
     res.redirect("/herramientas?add=1");
@@ -105,6 +120,7 @@ export const crearHerramienta = async (req, res) => {
     res.redirect("/herramientas?error=1");
   }
 };
+
 
 // =====================================
 //  EDITAR HERRAMIENTA

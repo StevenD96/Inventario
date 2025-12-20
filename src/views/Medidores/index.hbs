@@ -36,6 +36,14 @@
     </div>
   {{/if}}
 
+  {{#if existe}}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    Ya existe un medidor con esa descripción y especificación.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+{{/if}}
+
+
   {{#if error}}
     <div class="alert alert-danger alert-dismissible fade show">
       <i class="bi bi-exclamation-triangle-fill me-2"></i>

@@ -43,10 +43,8 @@ export const listarCloro = async (req, res) => {
       usuario,
       nombreUsuario: usuario.nombre_completo,
       rolUsuario: usuario.rol,
-
       moduloActivo: "Cloro",
       moduloInventario: null,
-
       cloro: rows,
       q,
       page,
@@ -54,10 +52,10 @@ export const listarCloro = async (req, res) => {
       mostrando: rows.length ? Math.min(page * PAGE_SIZE, total) : 0,
       totalPages,
       pages,
-
       add: req.query.add,
       edit: req.query.edit,
       delete: req.query.delete,
+      existe: req.query.existe,
       error: req.query.error
     });
 
@@ -68,6 +66,7 @@ export const listarCloro = async (req, res) => {
   }
 };
 
+
 /* =====================================
    CREAR CLORO
 ===================================== */
@@ -77,21 +76,40 @@ export const crearCloro = async (req, res) => {
     if (!usuario) return res.redirect("/");
 
     const { descripcion, especificacion, cantidad } = req.body;
+    const desc = descripcion.trim();
+    const espec = (especificacion || "").trim();
     const cantInt = parseInt(cantidad, 10) || 0;
 
+    //VALIDAR DUPLICADO (MISMO PATRÓN QUE ACCESORIOS)
+    const [dup] = await pool.query(
+      `SELECT id_cloro 
+       FROM Cloro 
+       WHERE descripcion = ? 
+         AND especificacion = ?
+         AND estado <> 'Inactivo'
+       LIMIT 1`,
+      [desc, espec]
+    );
+
+    if (dup.length) {
+      return res.redirect("/cloro?existe=1");
+    }
+
+    //INSERTAR
     await pool.query(
       `INSERT INTO Cloro (descripcion, especificacion, cantidad, estado)
        VALUES (?, ?, ?, 'Activo')`,
-      [descripcion.trim(), (especificacion || "").trim(), cantInt]
+      [desc, espec, cantInt]
     );
 
-    const especTexto = especificacion ? `, Especificación ${especificacion.trim()}` : ""; //modificada espec.
+    // BITÁCORA
+    const especTexto = espec ? `, Especificación ${espec}` : "";
 
     await registrarBitacora(
       req,
       "Cloro",
       "CREAR",
-      `Se creó material: ${descripcion.trim()}${especTexto}.`
+      `Se creó material: ${desc}${especTexto}.`
     );
 
     res.redirect("/cloro?add=1");

@@ -35,9 +35,9 @@
             <tr>
               <td>{{descripcion}}</td>
               <td>{{especificacion}}</td>
-              <td class="text-center {{#unless (gt cantidad 20)}} text-danger fw-bold {{/unless}}">
+              <td class="text-center {{#unless (gt cantidad 0)}} text-danger fw-bold {{/unless}}">
                 {{cantidad}}
-              </td>
+              </td> 
               <td class="text-end pe-3">
                 <button 
                   class="btn btn-sm btn-primary rounded-pill px-3 btn-solicitud" 

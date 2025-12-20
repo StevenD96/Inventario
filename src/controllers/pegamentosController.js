@@ -36,7 +36,7 @@ export const listarPegamentos = async (req, res) => {
       req,
       "Pegamentos",
       "CONSULTAR",
-      "El usuario consultó el listado de pegamentos"
+      "El usuario consultó el listado de pegamentos."
     );
 
     res.render("Pegamentos/index", {
@@ -56,10 +56,10 @@ export const listarPegamentos = async (req, res) => {
       pages,
       prevPage: Math.max(1, page - 1),
       nextPage: Math.min(totalPages, page + 1),
-
       add:    req.query.add,
       edit:   req.query.edit,
       delete: req.query.delete,
+      existe: req.query.existe,
       error:  req.query.error
     });
 
@@ -84,25 +84,40 @@ export const crearPegamento = async (req, res) => {
     if (!usuario) return res.redirect("/");
 
     const { descripcion, especificacion, cantidad } = req.body;
-
+    const desc = descripcion.trim();
+    const espec = (especificacion || "").trim();
     const cantInt = parseInt(cantidad, 10) || 0;
 
+    // Validar duplicado
+    const [dup] = await pool.query(
+      `SELECT id_pegamento
+       FROM Pegamentos
+       WHERE descripcion = ?
+         AND especificacion = ?
+         AND estado <> 'Inactivo'
+       LIMIT 1`,
+      [desc, espec]
+    );
+
+    if (dup.length) {
+      return res.redirect("/pegamentos?existe=1");
+    }
+
+    // Insertar
     await pool.query(
       `INSERT INTO Pegamentos (descripcion, especificacion, cantidad, estado)
        VALUES (?, ?, ?, 'Activo')`,
-      [descripcion.trim(), (especificacion || "").trim(), cantInt]
+      [desc, espec, cantInt]
     );
 
-    // Bitácora: Se creó material: Descripción, espec.
-    const especTexto = especificacion
-      ? `, espec. ${especificacion.trim()}`
-      : "";
+    // Bitácora
+    const especTexto = espec ? `, espec. ${espec}` : "";
 
     await registrarBitacora(
       req,
       "Pegamentos",
       "CREAR",
-      `Se creó material: ${descripcion.trim()}${especTexto}`
+      `Se creó material: ${desc}${especTexto}.`
     );
 
     res.redirect("/pegamentos?add=1");
@@ -173,7 +188,7 @@ export const editarPegamento = async (req, res) => {
     const especNueva  = (especificacion || "").trim();
     if (especActual !== especNueva) {
       cambios.push(
-        `Espec.: "${especActual || "-"}" → "${especNueva || "-"}"`
+        `Especificación "${especActual || "-"}" → "${especNueva || "-"}"`
       );
     }
 
@@ -240,7 +255,7 @@ export const eliminarPegamento = async (req, res) => {
     );
 
     const especTexto = row.especificacion
-      ? `, especi. ${row.especificacion}`
+      ? `, Especificación ${row.especificacion}`
       : "";
 
     // Bitácora: Material Descripción, especi. eliminado.

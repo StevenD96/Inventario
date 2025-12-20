@@ -57,6 +57,7 @@ export const listarLimpieza = async (req, res) => {
       add: req.query.add,
       edit: req.query.edit,
       delete: req.query.delete,
+      existe: req.query.existe,
       error: req.query.error
     });
   } catch (err) {
@@ -75,28 +76,47 @@ export const crearLimpieza = async (req, res) => {
     if (!usuario) return res.redirect("/");
 
     const { descripcion, cantidad } = req.body;
+    const desc = descripcion.trim();
     const cantInt = parseInt(cantidad, 10) || 0;
 
+    // 🔎 VALIDAR DUPLICADO (solo por descripción)
+    const [dup] = await pool.query(
+      `SELECT id_limpieza
+       FROM Limpieza
+       WHERE descripcion = ?
+         AND estado <> 'Inactivo'
+       LIMIT 1`,
+      [desc]
+    );
+
+    if (dup.length) {
+      return res.redirect("/limpieza?existe=1");
+    }
+
+    // ➕ INSERTAR
     await pool.query(
       `INSERT INTO Limpieza (descripcion, cantidad, estado)
        VALUES (?, ?, 'Activo')`,
-      [descripcion.trim(), cantInt]
+      [desc, cantInt]
     );
 
+    // 🧾 BITÁCORA
     await registrarBitacora(
       req,
       "Limpieza",
       "CREAR",
-      `Se creó material: ${descripcion.trim()}.`
+      `Se creó material: ${desc}.`
     );
 
     res.redirect("/limpieza?add=1");
+
   } catch (err) {
     console.error("Error creando limpieza:", err);
     await registrarBitacora(req, "Limpieza", "ERROR", err.message);
     res.redirect("/limpieza?error=1");
   }
 };
+
 
 // =====================================
 //  EDITAR LIMPIEZA

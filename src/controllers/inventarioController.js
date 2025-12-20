@@ -802,7 +802,7 @@ export const procesarSolicitud = async (req, res) => {
       req,
       "Inventario",
       "EDITAR",
-      `Movimiento de inventario (${categoria}) - ${tipo} de ${cantidadInt}${descripcionTexto}${diametroTexto}. Motivo: ${motivo}`
+      `Movimiento de inventario (${categoria}) - ${tipo} de ${cantidadInt}${descripcionTexto}${diametroTexto}. Motivo: ${motivo}.`
     );
 
     /* === REDIRECCIÓN FINAL (OK) === */

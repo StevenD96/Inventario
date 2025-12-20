@@ -33,7 +33,7 @@
           {{#each items}}
             <tr>
               <td>{{descripcion}}</td>
-              <td class="text-center {{#unless (gt cantidad 20)}} text-danger fw-bold {{/unless}}">
+              <td class="text-center {{#unless (gt cantidad 0)}} text-danger fw-bold {{/unless}}">
                 {{cantidad}}
               </td>
               <td class="text-end pe-3">
