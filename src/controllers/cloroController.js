@@ -34,7 +34,7 @@ export const listarCloro = async (req, res) => {
       req,
       "Cloro",
       "CONSULTAR",
-      "El usuario consultó el listado de cloro"
+      "El usuario consultó el listado de cloro."
     );
 
     res.render("Cloro/index", {
@@ -85,13 +85,13 @@ export const crearCloro = async (req, res) => {
       [descripcion.trim(), (especificacion || "").trim(), cantInt]
     );
 
-    const especTexto = especificacion ? `, espec. ${especificacion.trim()}` : "";
+    const especTexto = especificacion ? `, Especificación ${especificacion.trim()}` : ""; //modificada espec.
 
     await registrarBitacora(
       req,
       "Cloro",
       "CREAR",
-      `Se creó material: ${descripcion.trim()}${especTexto}`
+      `Se creó material: ${descripcion.trim()}${especTexto}.`
     );
 
     res.redirect("/cloro?add=1");
@@ -145,7 +145,7 @@ export const editarCloro = async (req, res) => {
     const especActual = actual.especificacion || "";
     const especNueva  = (especificacion || "").trim();
     if (especActual !== especNueva)
-      cambios.push(`Espec.: "${especActual || "-"}" → "${especNueva || "-"}"`);
+      cambios.push(`Especificación "${especActual || "-"}" → "${especNueva || "-"}"`);
 
     if (actual.cantidad !== cantNueva)
       cambios.push(`Cantidad: ${actual.cantidad} → ${cantNueva}`);
@@ -156,7 +156,7 @@ export const editarCloro = async (req, res) => {
       req,
       "Cloro",
       "EDITAR",
-      `Material ${descripcion.trim()}: ${detalleCambios}`
+      `Material ${descripcion.trim()} modificado: ${detalleCambios}`
     );
 
     res.redirect("/cloro?edit=1");
@@ -189,7 +189,7 @@ export const eliminarCloro = async (req, res) => {
       id_cloro
     ]);
 
-    const especTexto = row.especificacion ? `, especi. ${row.especificacion}` : "";
+    const especTexto = row.especificacion ? `, Especificación ${row.especificacion}` : "";
 
     await registrarBitacora(
       req,

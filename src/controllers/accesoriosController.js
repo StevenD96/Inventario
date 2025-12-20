@@ -37,7 +37,7 @@ export const listarAccesorios = async (req, res) => {
       req,
       "Accesorios",
       "CONSULTAR",
-      "El usuario consultó el listado de accesorios"
+      "El usuario consultó el listado de accesorios."
     );
 
     // === RENDER ===
@@ -119,7 +119,7 @@ export const crearAccesorio = async (req, res) => {
     req,
     "Accesorios",
     "CREAR",
-    `Se creó material: ${descripcion}, tipo ${tipo}, diámetro ${diametro}, espec. ${especificacion}, cantidad ${cantidad}.`
+    `Se creó material: ${descripcion}, Tipo ${tipo}, Diámetro ${diametro}, Especificación ${especificacion}, Cantidad ${cantidad}.`
     );
 
 
@@ -176,20 +176,20 @@ export const editarAccesorio = async (req, res) => {
       cambios.push(`Diámetro: ${actual.diametro} → ${diametro}`);
 
     if (actual.especificacion !== especificacion)
-      cambios.push(`Especificación: "${actual.especificacion}" → "${especificacion}"`);
+      cambios.push(`Especificación "${actual.especificacion}" → "${especificacion}"`);
 
     if (Number(actual.cantidad) !== Number(cantidad))
       cambios.push(`Cantidad: ${actual.cantidad} → ${cantidad}`);
 
     const textoCambios =
-      cambios.length > 0 ? cambios.join(" | ") : "Sin cambios detectados";
+      cambios.length > 0 ? cambios.join(", ") : "Sin cambios detectados";
 
     // Registrar bitácora con EXACTO formato solicitado
     await registrarBitacora(
       req,
       "Accesorios",
       "EDITAR",
-      `Material ${descripcion}, diámetro ${diametro}" modificado: ${textoCambios}`
+      `Material ${descripcion}, Diámetro ${diametro} modificado: ${textoCambios}.`
     );
 
     return res.redirect("/accesorios?edit=1");
@@ -240,7 +240,7 @@ export const eliminarAccesorio = async (req, res) => {
       req,
       "Accesorios",
       "ELIMINAR",
-      `Material ${row.descripcion}, diámetro ${row.diametro}" eliminado.`
+      `Material ${row.descripcion}, Diámetro ${row.diametro} eliminado.`
     );
 
     res.redirect("/accesorios?delete=1");

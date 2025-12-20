@@ -34,7 +34,7 @@ export const listarHerramientas = async (req, res) => {
       req,
       "Herramientas",
       "CONSULTAR",
-      "El usuario consultó el listado de herramientas"
+      "El usuario consultó el listado de herramientas."
     );
 
     res.render("Herramientas/index", {
@@ -87,14 +87,14 @@ export const crearHerramienta = async (req, res) => {
     );
 
     const especTexto = especificacion
-      ? `, espec. ${especificacion.trim()}`
+      ? `, Especificación ${especificacion.trim()}`
       : "";
 
     await registrarBitacora(
       req,
       "Herramientas",
       "CREAR",
-      `Se creó herramienta: ${descripcion.trim()}${especTexto}`
+      `Se creó material: ${descripcion.trim()}${especTexto}.`
     );
 
     res.redirect("/herramientas?add=1");
@@ -151,7 +151,7 @@ export const editarHerramienta = async (req, res) => {
     const especActual = actual.especificacion || "";
     const especNueva  = (especificacion || "").trim();
     if (especActual !== especNueva) {
-      cambios.push(`Espec.: "${especActual || "-"}" → "${especNueva || "-"}"`);
+      cambios.push(`Especificación "${especActual || "-"}" → "${especNueva || "-"}"`);
     }
 
     if (actual.cantidad !== cantNueva) {
@@ -166,7 +166,7 @@ export const editarHerramienta = async (req, res) => {
       req,
       "Herramientas",
       "EDITAR",
-      `Herramienta ${descripcion.trim()}: ${detalleCambios}`
+      `Material ${descripcion.trim()} modificado: ${detalleCambios}.`
     );
 
     res.redirect("/herramientas?edit=1");
@@ -206,14 +206,14 @@ export const eliminarHerramienta = async (req, res) => {
     );
 
     const especTexto = row.especificacion
-      ? `, espec. ${row.especificacion}`
+      ? `, Especificación ${row.especificacion}`
       : "";
 
     await registrarBitacora(
       req,
       "Herramientas",
       "ELIMINAR",
-      `Herramienta ${row.descripcion}${especTexto} eliminada.`
+      `Material ${row.descripcion}${especTexto} eliminado.`
     );
 
     res.redirect("/herramientas?delete=1");

@@ -91,7 +91,7 @@ export const crearMedidor = async (req, res) => {
       req,
       "Medidores",
       "CREAR",
-      `Se creó medidor: ${descripcion.trim()}`
+      `Se creó material: ${descripcion.trim()}.`
     );
 
     res.redirect("/medidores?add=1");
@@ -140,7 +140,7 @@ export const editarMedidor = async (req, res) => {
     const especA = actual.especificacion || "";
     const especN = (especificacion || "").trim();
     if (especA !== especN)
-      cambios.push(`Espec.: "${especA}" → "${especN}"`);
+      cambios.push(`Especificación "${especA}" → "${especN}"`);
 
     if (actual.cantidad !== cantNueva)
       cambios.push(`Cantidad: ${actual.cantidad} → ${cantNueva}`);
@@ -149,7 +149,7 @@ export const editarMedidor = async (req, res) => {
       req,
       "Medidores",
       "EDITAR",
-      `Medidor ${descripcion.trim()}: ${cambios.join(", ")}`
+      `Material ${descripcion.trim()} modificado: ${cambios.join(", ")}.`
     );
 
     res.redirect("/medidores?edit=1");
@@ -192,7 +192,7 @@ export const eliminarMedidor = async (req, res) => {
       req,
       "Medidores",
       "ELIMINAR",
-      `Medidor ${row.descripcion} eliminado`
+      `Material ${row.descripcion} eliminado.`
     );
 
     res.redirect("/medidores?delete=1");

@@ -303,7 +303,8 @@ export const listarUsuariosInactivos = async (req, res) => {
         usuarioSesion.id_usuario,
         "Usuarios",
         "CONSULTAR",
-        "Consulta de usuarios inactivos"
+        //"Consulta de usuarios inactivos"
+        "El usuario consultó el listado de inactivos"
       ]
     );
 

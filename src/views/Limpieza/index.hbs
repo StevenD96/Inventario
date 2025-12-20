@@ -32,7 +32,7 @@
   {{#if delete}}
     <div class="alert alert-success alert-dismissible fade show">
       <i class="bi bi-check-circle-fill me-2"></i>
-      Producto eliminado correctamente.
+      Producto eliminado con éxito.
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   {{/if}}
@@ -148,6 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("edit_id_limpieza").value = btn.dataset.id;
       document.getElementById("edit_descripcion_limp").value = btn.dataset.descripcion;
       document.getElementById("edit_cantidad_limp").value = btn.dataset.cantidad;
+
+       //nueva linea
+    document.getElementById("formEditarLimpieza").action =
+      `/limpieza/editar/${btn.dataset.id}`;
       new bootstrap.Modal(document.getElementById("modalEditarLimpieza")).show();
     });
   });

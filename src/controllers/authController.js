@@ -72,7 +72,7 @@ export const procesarLogin = async (req, res) => {
       resultado.id_usuario,
       "Login",
       "CONSULTAR",
-      "Inicio de sesión exitoso",
+      "Inicio de sesión exitoso.",
     ]);
 
     // === Actualizar último ingreso ===

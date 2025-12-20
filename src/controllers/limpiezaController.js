@@ -34,7 +34,7 @@ export const listarLimpieza = async (req, res) => {
       req,
       "Limpieza",
       "CONSULTAR",
-      "El usuario consultó el listado de limpieza"
+      "El usuario consultó el listado de limpieza."
     );
 
     res.render("limpieza/index", {
@@ -87,7 +87,7 @@ export const crearLimpieza = async (req, res) => {
       req,
       "Limpieza",
       "CREAR",
-      `Se creó el producto de limpieza: ${descripcion.trim()}`
+      `Se creó material: ${descripcion.trim()}.`
     );
 
     res.redirect("/limpieza?add=1");
@@ -130,7 +130,8 @@ export const editarLimpieza = async (req, res) => {
       req,
       "Limpieza",
       "EDITAR",
-      `Producto de limpieza editado: ${descripcion.trim()}`
+      `Material ${descripcion.trim()} modificado.`
+
     );
 
     res.redirect("/limpieza?edit=1");
@@ -167,7 +168,8 @@ export const eliminarLimpieza = async (req, res) => {
       req,
       "Limpieza",
       "ELIMINAR",
-      `Producto de limpieza eliminado: ${row.descripcion}`
+      `Material ${row.descripcion} eliminado.`
+
     );
 
     res.redirect("/limpieza?delete=1");
