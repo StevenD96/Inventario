@@ -25,7 +25,7 @@ export const listarTuberia = async (req, res) => {
     const tuberias = result[1];
 
     // ▶ Registrar consulta en bitácora
-    registrarBitacora(req, "Tubería", "CONSULTAR", "El usuario consultó el listado de tuberías");
+    registrarBitacora(req, "Tubería", "CONSULTAR", "El usuario consultó el listado de tuberías.");
 
     res.render("Tuberia/index", {
       layout: "app",
@@ -79,7 +79,7 @@ export const crearTuberia = async (req, res) => {
       req,
       "Tubería",
       "CREAR",
-      `Se creó material: ${descripcion}, diámetro ${diametro}, espec. ${especificacion}, cantidad ${cantidad}`
+      `Se creó material: ${descripcion}, Diámetro ${diametro}, Especificación ${especificacion}, Cantidad ${cantidad}.`
     );
 
     return res.redirect("/tuberia?add=1");

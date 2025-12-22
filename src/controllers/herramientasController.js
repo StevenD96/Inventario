@@ -104,12 +104,14 @@ export const crearHerramienta = async (req, res) => {
 
     //BITÁCORA
     const especTexto = espec ? `, Especificación ${espec}` : "";
+    const cantIntTexto = cantInt ? `, Cantidad ${cantInt}` : "";
+
 
     await registrarBitacora(
       req,
       "Herramientas",
       "CREAR",
-      `Se creó material: ${desc}${especTexto}.`
+      `Se creó material: ${desc}${especTexto}${cantIntTexto}.`
     );
 
     res.redirect("/herramientas?add=1");

@@ -104,12 +104,14 @@ export const crearCloro = async (req, res) => {
 
     // BITÁCORA
     const especTexto = espec ? `, Especificación ${espec}` : "";
+    const cantIntTexto = espec ? `, Cantidad ${cantInt}` : "";
+
 
     await registrarBitacora(
       req,
       "Cloro",
       "CREAR",
-      `Se creó material: ${desc}${especTexto}.`
+      `Se creó material: ${desc}${especTexto}${cantIntTexto}.`
     );
 
     res.redirect("/cloro?add=1");
@@ -174,7 +176,7 @@ export const editarCloro = async (req, res) => {
       req,
       "Cloro",
       "EDITAR",
-      `Material ${descripcion.trim()} modificado: ${detalleCambios}`
+      `Material ${descripcion.trim()} modificado: ${detalleCambios}.`
     );
 
     res.redirect("/cloro?edit=1");

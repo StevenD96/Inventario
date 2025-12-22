@@ -111,13 +111,15 @@ export const crearPegamento = async (req, res) => {
     );
 
     // Bitácora
-    const especTexto = espec ? `, espec. ${espec}` : "";
+    const especTexto = espec ? `, Especificación ${espec}` : "";
+    const cantidadIntTexto = cantInt ? `, Cantidad ${cantInt}` : "";
+
 
     await registrarBitacora(
       req,
       "Pegamentos",
       "CREAR",
-      `Se creó material: ${desc}${especTexto}.`
+      `Se creó material: ${desc}${especTexto}${cantidadIntTexto}.`
     );
 
     res.redirect("/pegamentos?add=1");
@@ -208,7 +210,7 @@ export const editarPegamento = async (req, res) => {
       req,
       "Pegamentos",
       "EDITAR",
-      `Material ${descripcion.trim()}: ${detalleCambios}`
+      `Material ${descripcion.trim()} modificado: ${detalleCambios}.`
     );
 
     res.redirect("/pegamentos?edit=1");

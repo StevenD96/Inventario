@@ -105,11 +105,13 @@ export const crearMedidor = async (req, res) => {
     );
 
     // Bitácora
+    const cantIntTexto = cantInt ? `, Cantidad ${cantInt}` : "";
+
     await registrarBitacora(
       req,
       "Medidores",
       "CREAR",
-      `Se creó material: ${desc}.`
+      `Se creó material: ${desc}${cantIntTexto}.`
     );
 
     res.redirect("/medidores?add=1");

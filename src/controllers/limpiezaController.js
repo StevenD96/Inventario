@@ -100,7 +100,9 @@ export const crearLimpieza = async (req, res) => {
       [desc, cantInt]
     );
 
-    // 🧾 BITÁCORA
+    //BITÁCORA
+    //const cantIntTexto = cantInt ? `, Cantidad ${cantInt}` : "";
+
     await registrarBitacora(
       req,
       "Limpieza",
@@ -117,7 +119,6 @@ export const crearLimpieza = async (req, res) => {
   }
 };
 
-
 // =====================================
 //  EDITAR LIMPIEZA
 // =====================================
@@ -128,6 +129,8 @@ export const editarLimpieza = async (req, res) => {
 
     const id_limpieza = req.params.id_limpieza || req.body.id_limpieza;
     const { descripcion, cantidad } = req.body;
+
+    const descNueva = descripcion.trim();
     const cantNueva = parseInt(cantidad, 10) || 0;
 
     const [[actual]] = await pool.query(
@@ -143,24 +146,37 @@ export const editarLimpieza = async (req, res) => {
       `UPDATE Limpieza
        SET descripcion = ?, cantidad = ?
        WHERE id_limpieza = ?`,
-      [descripcion.trim(), cantNueva, id_limpieza]
+      [descNueva, cantNueva, id_limpieza]
     );
+
+    const cambios = [];
+
+    if (actual.descripcion !== descNueva) {
+      cambios.push(`Descripción: ${actual.descripcion} → ${descNueva}`);
+    }
+
+    if (Number(actual.cantidad) !== cantNueva) {
+      cambios.push(`Cantidad: ${actual.cantidad} → ${cantNueva}`);
+    }
+
+    const detalle = cambios.length ? `: ${cambios.join(", ")}` : "";
 
     await registrarBitacora(
       req,
       "Limpieza",
       "EDITAR",
-      `Material ${descripcion.trim()} modificado.`
-
+      `Material ${actual.descripcion} modificado${detalle}.`
     );
 
     res.redirect("/limpieza?edit=1");
+
   } catch (err) {
     console.error("Error editando limpieza:", err);
     await registrarBitacora(req, "Limpieza", "ERROR", err.message);
     res.redirect("/limpieza?error=1");
   }
 };
+
 
 // =====================================
 //  ELIMINAR LIMPIEZA (estado = Inactivo)

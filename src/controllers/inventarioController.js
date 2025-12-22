@@ -785,6 +785,38 @@ export const procesarSolicitud = async (req, res) => {
       descripcionTexto = actual.descripcion ? ` ${actual.descripcion}` : "";
     }
 
+    /* === LIMPIEZA === */
+if (categoria === "Limpieza") {
+
+  const [[actual]] = await pool.query(
+    "SELECT cantidad, descripcion FROM Limpieza WHERE id_limpieza = ?",
+    [id_item]
+  );
+
+  if (!actual) throw new Error("Producto de limpieza no encontrado");
+
+  // Validación de salida
+  if (tipo === "SALIDA" && actual.cantidad < cantidadInt) {
+    await registrarBitacora(
+      req,
+      "Inventario",
+      "ERROR",
+      `Intento de salida (${cantidadInt}) mayor al stock disponible (${actual.cantidad})`
+    );
+    return res.redirect("/inventario/limpieza?msg=cantidad");
+  }
+
+  const signo = tipo === "INGRESO" ? 1 : -1;
+
+  await pool.query(
+    "UPDATE Limpieza SET cantidad = cantidad + ? WHERE id_limpieza = ?",
+    [signo * cantidadInt, id_item]
+  );
+
+  descripcionTexto = actual.descripcion ? ` ${actual.descripcion}` : "";
+}
+
+
 
     /* === REGISTRAR MOVIMIENTO === */
     await pool.query("CALL sp_registrar_movimiento(?, ?, ?, ?, ?, ?)", [
