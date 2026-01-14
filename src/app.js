@@ -42,7 +42,8 @@ app.engine(".hbs", engine({
 }));
 
 app.set("view engine", ".hbs");
-app.set("views", path.join(__dirname, "views"));
+//app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(process.cwd(), "src", "views"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
