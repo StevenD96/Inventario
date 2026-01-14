@@ -51,7 +51,7 @@ export const procesarCambioClave = async (req, res) => {
 
     // === Actualizar en base de datos ===
     await pool.query(
-      `UPDATE Usuario 
+      `UPDATE usuario 
        SET contrasena_hash = ?, cambio_contrasena_hash = FALSE, actualizado_en = NOW() 
        WHERE id_usuario = ?`,
       [hash, id_usuario]

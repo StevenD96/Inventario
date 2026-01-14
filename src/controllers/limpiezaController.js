@@ -82,7 +82,7 @@ export const crearLimpieza = async (req, res) => {
     // 🔎 VALIDAR DUPLICADO (solo por descripción)
     const [dup] = await pool.query(
       `SELECT id_limpieza
-       FROM Limpieza
+       FROM limpieza
        WHERE descripcion = ?
          AND estado <> 'Inactivo'
        LIMIT 1`,
@@ -95,7 +95,7 @@ export const crearLimpieza = async (req, res) => {
 
     // ➕ INSERTAR
     await pool.query(
-      `INSERT INTO Limpieza (descripcion, cantidad, estado)
+      `INSERT INTO limpieza (descripcion, cantidad, estado)
        VALUES (?, ?, 'Activo')`,
       [desc, cantInt]
     );
@@ -135,7 +135,7 @@ export const editarLimpieza = async (req, res) => {
 
     const [[actual]] = await pool.query(
       `SELECT descripcion, cantidad
-       FROM Limpieza
+       FROM limpieza
        WHERE id_limpieza = ?`,
       [id_limpieza]
     );
@@ -143,7 +143,7 @@ export const editarLimpieza = async (req, res) => {
     if (!actual) return res.redirect("/limpieza?error=1");
 
     await pool.query(
-      `UPDATE Limpieza
+      `UPDATE limpieza
        SET descripcion = ?, cantidad = ?
        WHERE id_limpieza = ?`,
       [descNueva, cantNueva, id_limpieza]
@@ -189,14 +189,14 @@ export const eliminarLimpieza = async (req, res) => {
     const { id_limpieza } = req.body;
 
     const [[row]] = await pool.query(
-      `SELECT descripcion FROM Limpieza WHERE id_limpieza = ?`,
+      `SELECT descripcion FROM limpieza WHERE id_limpieza = ?`,
       [id_limpieza]
     );
 
     if (!row) return res.redirect("/limpieza?error=1");
 
     await pool.query(
-      `UPDATE Limpieza SET estado = 'Inactivo' WHERE id_limpieza = ?`,
+      `UPDATE limpieza SET estado = 'Inactivo' WHERE id_limpieza = ?`,
       [id_limpieza]
     );
 

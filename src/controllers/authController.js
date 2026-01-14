@@ -59,7 +59,7 @@ export const procesarLogin = async (req, res) => {
       await pool.query("CALL sp_registrar_bitacora(?, ?, ?, ?)", [
         resultado.id_usuario,
         "Login",
-        "ALERTA",
+        "CONSULTAR",
         "Usuario requiere cambio de contraseña",
       ]);
 
@@ -76,7 +76,7 @@ export const procesarLogin = async (req, res) => {
     ]);
 
     // === Actualizar último ingreso ===
-    await pool.query("UPDATE Usuario SET ultimo_ingreso = NOW() WHERE id_usuario = ?", [
+    await pool.query("UPDATE usuario SET ultimo_ingreso = NOW() WHERE id_usuario = ?", [
       resultado.id_usuario,
     ]);
 

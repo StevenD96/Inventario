@@ -91,7 +91,7 @@ export const crearPegamento = async (req, res) => {
     // Validar duplicado
     const [dup] = await pool.query(
       `SELECT id_pegamento
-       FROM Pegamentos
+       FROM pegamentos
        WHERE descripcion = ?
          AND especificacion = ?
          AND estado <> 'Inactivo'
@@ -105,7 +105,7 @@ export const crearPegamento = async (req, res) => {
 
     // Insertar
     await pool.query(
-      `INSERT INTO Pegamentos (descripcion, especificacion, cantidad, estado)
+      `INSERT INTO pegamentos (descripcion, especificacion, cantidad, estado)
        VALUES (?, ?, ?, 'Activo')`,
       [desc, espec, cantInt]
     );
@@ -152,7 +152,7 @@ export const editarPegamento = async (req, res) => {
     // 1. Traer valores actuales
     const [[actual]] = await pool.query(
       `SELECT descripcion, especificacion, cantidad
-       FROM Pegamentos
+       FROM pegamentos
        WHERE id_pegamento = ?
        LIMIT 1`,
       [id_pegamento]
@@ -164,7 +164,7 @@ export const editarPegamento = async (req, res) => {
 
     // 2. Actualizar registro
     await pool.query(
-      `UPDATE Pegamentos
+      `UPDATE pegamentos
        SET descripcion   = ?,
            especificacion = ?,
            cantidad      = ?
@@ -239,7 +239,7 @@ export const eliminarPegamento = async (req, res) => {
 
     const [[row]] = await pool.query(
       `SELECT descripcion, especificacion
-       FROM Pegamentos
+       FROM pegamentos
        WHERE id_pegamento = ?
        LIMIT 1`,
       [id_pegamento]
@@ -250,7 +250,7 @@ export const eliminarPegamento = async (req, res) => {
     }
 
     await pool.query(
-      `UPDATE Pegamentos
+      `UPDATE pegamentos
        SET estado = 'Inactivo'
        WHERE id_pegamento = ?`,
       [id_pegamento]

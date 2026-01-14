@@ -43,7 +43,7 @@ export const inventarioTuberia = async (req, res) => {
       req,
       "Inventario",
       "CONSULTAR",
-      "El usuario consultó el inventario de tuberías"
+      "El usuario consultó el inventario de tuberías."
     );
 
     let mensaje = null;
@@ -125,7 +125,7 @@ export const inventarioAccesorios = async (req, res) => {
       req,
       "Inventario",
       "CONSULTAR",
-      "El usuario consultó el inventario de accesorios"
+      "El usuario consultó el inventario de accesorios."
     );
 
     let mensaje = null;
@@ -205,7 +205,7 @@ export const inventarioPegamentos = async (req, res) => {
       categoria: "Pegamentos"
     }));
 
-    await registrarBitacora(req, "Inventario", "CONSULTAR", "El usuario consultó el inventario de pegamentos");
+    await registrarBitacora(req, "Inventario", "CONSULTAR", "El usuario consultó el inventario de pegamentos.");
 
     let mensaje = null;
     if (req.query.msg === "ok") {
@@ -293,7 +293,7 @@ export const inventarioCloro = async (req, res) => {
       req,
       "Inventario",
       "CONSULTAR",
-      "El usuario consultó el inventario de cloro"
+      "El usuario consultó el inventario de cloro."
     );
 
     let mensaje = null;
@@ -381,7 +381,7 @@ export const inventarioMedidores = async (req, res) => {
       req,
       "Inventario",
       "CONSULTAR",
-      "El usuario consultó el inventario de medidores"
+      "El usuario consultó el inventario de medidores."
     );
 
     // Mensajes
@@ -464,7 +464,7 @@ export const inventarioMedidores = async (req, res) => {
       req,
       "Inventario",
       "CONSULTAR",
-      "El usuario consultó el inventario de herramientas"
+      "El usuario consultó el inventario de herramientas."
     );
 
     let mensaje = null;
@@ -543,7 +543,7 @@ export const inventarioLimpieza = async (req, res) => {
       req,
       "Inventario",
       "CONSULTAR",
-      "El usuario consultó el inventario de limpieza"
+      "El usuario consultó el inventario de limpieza."
     );
 
     let mensaje = null;
@@ -616,7 +616,7 @@ export const procesarSolicitud = async (req, res) => {
     /* === TUBERÍA === */
     if (categoria === "Tubería") {
       const [[actual]] = await pool.query(
-        "SELECT cantidad, diametro FROM Tuberia WHERE id_tuberia = ?",
+        "SELECT cantidad, diametro FROM tuberia WHERE id_tuberia = ?",
         [id_item]
       );
 
@@ -631,7 +631,7 @@ export const procesarSolicitud = async (req, res) => {
       const signo = tipo === "INGRESO" ? 1 : -1;
 
       await pool.query(
-        "UPDATE Tuberia SET cantidad = cantidad + ? WHERE id_tuberia = ?",
+        "UPDATE tuberia SET cantidad = cantidad + ? WHERE id_tuberia = ?",
         [signo * cantidadInt, id_item]
       );
 
@@ -642,7 +642,7 @@ export const procesarSolicitud = async (req, res) => {
     /* === ACCESORIOS === */
     if (categoria === "Accesorios") {
       const [[actual]] = await pool.query(
-        "SELECT descripcion, cantidad, diametro FROM Accesorios WHERE id_accesorio = ?",
+        "SELECT descripcion, cantidad, diametro FROM accesorios WHERE id_accesorio = ?",
         [id_item]
       );
 
@@ -657,7 +657,7 @@ export const procesarSolicitud = async (req, res) => {
       const signo = tipo === "INGRESO" ? 1 : -1;
 
       await pool.query(
-        "UPDATE Accesorios SET cantidad = cantidad + ? WHERE id_accesorio = ?",
+        "UPDATE accesorios SET cantidad = cantidad + ? WHERE id_accesorio = ?",
         [signo * cantidadInt, id_item]
       );
 
@@ -670,7 +670,7 @@ export const procesarSolicitud = async (req, res) => {
     if (categoria === "Pegamentos") {
 
       const [[actual]] = await pool.query(
-        "SELECT cantidad, descripcion, especificacion FROM Pegamentos WHERE id_pegamento = ?",
+        "SELECT cantidad, descripcion, especificacion FROM pegamentos WHERE id_pegamento = ?",
         [id_item]
       );
 
@@ -685,7 +685,7 @@ export const procesarSolicitud = async (req, res) => {
       const signo = tipo === "INGRESO" ? 1 : -1;
 
       await pool.query(
-        "UPDATE Pegamentos SET cantidad = cantidad + ? WHERE id_pegamento = ?",
+        "UPDATE pegamentos SET cantidad = cantidad + ? WHERE id_pegamento = ?",
         [signo * cantidadInt, id_item]
       );
 
@@ -696,7 +696,7 @@ export const procesarSolicitud = async (req, res) => {
     if (categoria === "Cloro") {
 
       const [[actual]] = await pool.query(
-        "SELECT cantidad, descripcion, especificacion FROM Cloro WHERE id_cloro = ?",
+        "SELECT cantidad, descripcion, especificacion FROM cloro WHERE id_cloro = ?",
         [id_item]
       );
 
@@ -716,7 +716,7 @@ export const procesarSolicitud = async (req, res) => {
       const signo = tipo === "INGRESO" ? 1 : -1;
 
       await pool.query(
-        "UPDATE Cloro SET cantidad = cantidad + ? WHERE id_cloro = ?",
+        "UPDATE cloro SET cantidad = cantidad + ? WHERE id_cloro = ?",
         [signo * cantidadInt, id_item]
       );
 
@@ -727,7 +727,7 @@ export const procesarSolicitud = async (req, res) => {
     if (categoria === "Medidores") {
 
       const [[actual]] = await pool.query(
-        "SELECT cantidad, descripcion, especificacion FROM Medidores WHERE id_medidor = ?",
+        "SELECT cantidad, descripcion, especificacion FROM medidores WHERE id_medidor = ?",
         [id_item]
       );
 
@@ -747,7 +747,7 @@ export const procesarSolicitud = async (req, res) => {
       const signo = tipo === "INGRESO" ? 1 : -1;
 
       await pool.query(
-        "UPDATE Medidores SET cantidad = cantidad + ? WHERE id_medidor = ?",
+        "UPDATE medidores SET cantidad = cantidad + ? WHERE id_medidor = ?",
         [signo * cantidadInt, id_item]
       );
 
@@ -758,7 +758,7 @@ export const procesarSolicitud = async (req, res) => {
     if (categoria === "Herramientas") {
 
       const [[actual]] = await pool.query(
-        "SELECT cantidad, descripcion, especificacion FROM Herramientas WHERE id_herramienta = ?",
+        "SELECT cantidad, descripcion, especificacion FROM herramientas WHERE id_herramienta = ?",
         [id_item]
       );
 
@@ -778,7 +778,7 @@ export const procesarSolicitud = async (req, res) => {
       const signo = tipo === "INGRESO" ? 1 : -1;
 
       await pool.query(
-        "UPDATE Herramientas SET cantidad = cantidad + ? WHERE id_herramienta = ?",
+        "UPDATE herramientas SET cantidad = cantidad + ? WHERE id_herramienta = ?",
         [signo * cantidadInt, id_item]
       );
 
@@ -789,7 +789,7 @@ export const procesarSolicitud = async (req, res) => {
 if (categoria === "Limpieza") {
 
   const [[actual]] = await pool.query(
-    "SELECT cantidad, descripcion FROM Limpieza WHERE id_limpieza = ?",
+    "SELECT cantidad, descripcion FROM limpieza WHERE id_limpieza = ?",
     [id_item]
   );
 
@@ -809,7 +809,7 @@ if (categoria === "Limpieza") {
   const signo = tipo === "INGRESO" ? 1 : -1;
 
   await pool.query(
-    "UPDATE Limpieza SET cantidad = cantidad + ? WHERE id_limpieza = ?",
+    "UPDATE limpieza SET cantidad = cantidad + ? WHERE id_limpieza = ?",
     [signo * cantidadInt, id_item]
   );
 

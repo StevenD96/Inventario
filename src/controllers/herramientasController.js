@@ -83,7 +83,7 @@ export const crearHerramienta = async (req, res) => {
     // VALIDAR DUPLICADO (MISMO PATRÓN QUE ACCESORIOS)
     const [dup] = await pool.query(
       `SELECT id_herramienta
-       FROM Herramientas
+       FROM herramientas
        WHERE descripcion = ?
          AND especificacion = ?
          AND estado <> 'Inactivo'
@@ -97,7 +97,7 @@ export const crearHerramienta = async (req, res) => {
 
     // INSERTAR
     await pool.query(
-      `INSERT INTO Herramientas (descripcion, especificacion, cantidad, estado)
+      `INSERT INTO herramientas (descripcion, especificacion, cantidad, estado)
        VALUES (?, ?, ?, 'Activo')`,
       [desc, espec, cantInt]
     );
@@ -138,7 +138,7 @@ export const editarHerramienta = async (req, res) => {
 
     const [[actual]] = await pool.query(
       `SELECT descripcion, especificacion, cantidad
-       FROM Herramientas
+       FROM herramientas
        WHERE id_herramienta = ?
        LIMIT 1`,
       [id_herramienta]
@@ -147,7 +147,7 @@ export const editarHerramienta = async (req, res) => {
     if (!actual) return res.redirect("/herramientas?error=1");
 
     await pool.query(
-      `UPDATE Herramientas
+      `UPDATE herramientas
        SET descripcion   = ?, 
            especificacion = ?, 
            cantidad       = ?
@@ -208,7 +208,7 @@ export const eliminarHerramienta = async (req, res) => {
 
     const [[row]] = await pool.query(
       `SELECT descripcion, especificacion
-       FROM Herramientas
+       FROM herramientas
        WHERE id_herramienta = ?
        LIMIT 1`,
       [id_herramienta]
@@ -217,7 +217,7 @@ export const eliminarHerramienta = async (req, res) => {
     if (!row) return res.redirect("/herramientas?error=1");
 
     await pool.query(
-      `UPDATE Herramientas
+      `UPDATE herramientas
        SET estado = 'Inactivo'
        WHERE id_herramienta = ?`,
       [id_herramienta]

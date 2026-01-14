@@ -16,7 +16,7 @@ export const listarUsuarios = async (req, res) => {
     // total
     const [[{ total }]] = await pool.query(
       `SELECT COUNT(*) AS total
-       FROM Usuario
+       FROM usuario
        WHERE estado <> 'Inactivo'
          AND ( ? = '' OR nombre_completo LIKE ? OR nombre_usuario LIKE ? OR correo LIKE ? )`,
       [q, like, like, like]
@@ -25,7 +25,7 @@ export const listarUsuarios = async (req, res) => {
     // datos página
     const [rows] = await pool.query(
       `SELECT id_usuario, nombre_completo, nombre_usuario, correo, rol
-       FROM Usuario
+       FROM usuario
        WHERE estado <> 'Inactivo'
          AND ( ? = '' OR nombre_completo LIKE ? OR nombre_usuario LIKE ? OR correo LIKE ? )
        ORDER BY nombre_completo
@@ -148,7 +148,7 @@ export const obtenerUsuarioPorId = async (req, res) => {
   try {
     const [rows] = await pool.query(
       `SELECT id_usuario, nombre_completo, nombre_usuario, correo, rol
-       FROM Usuario
+       FROM usuario
        WHERE id_usuario = ? AND estado <> 'Inactivo'
        LIMIT 1`,
       [id]
@@ -179,7 +179,7 @@ export const editarUsuario = async (req, res) => {
   try {
     // Obtener datos actuales
     const [rows] = await pool.query(
-      "SELECT nombre_completo, nombre_usuario, correo, rol FROM Usuario WHERE id_usuario = ?",
+      "SELECT nombre_completo, nombre_usuario, correo, rol FROM usuario WHERE id_usuario = ?",
       [id_usuario]
     );
 
@@ -248,7 +248,7 @@ export const eliminarUsuario = async (req, res) => {
 
     // 1️⃣ Obtener datos del usuario antes de inactivarlo
     const [rows] = await pool.query(
-      "SELECT nombre_usuario FROM Usuario WHERE id_usuario = ?",
+      "SELECT nombre_usuario FROM usuario WHERE id_usuario = ?",
       [id_usuario]
     );
 
@@ -361,13 +361,13 @@ export const reactivarUsuario = async (req, res) => {
   try {
     // Obtener datos del usuario antes de actualizar (para bitácora)
     const [[usuario]] = await pool.query(
-      "SELECT nombre_usuario FROM Usuario WHERE id_usuario = ?",
+      "SELECT nombre_usuario FROM usuario WHERE id_usuario = ?",
       [id_usuario]
     );
 
     // Reactivar usuario
     await pool.query(
-      "UPDATE Usuario SET estado = 'Activo' WHERE id_usuario = ?",
+      "UPDATE usuario SET estado = 'Activo' WHERE id_usuario = ?",
       [id_usuario]
     );
 

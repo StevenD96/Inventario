@@ -16,7 +16,7 @@ export const procesarRecuperar = async (req, res) => {
 
   try {
     const [[usuario]] = await pool.query(
-      "SELECT id_usuario, nombre_completo FROM Usuario WHERE correo = ?",
+      "SELECT id_usuario, nombre_completo FROM usuario WHERE correo = ?",
       [correo]
     );
 
@@ -34,7 +34,7 @@ export const procesarRecuperar = async (req, res) => {
     const validoHasta = new Date(Date.now() + 2 * 60 * 1000);
 
     await pool.query(
-      "INSERT INTO RecuperacionToken (id_usuario, token, valido_hasta) VALUES (?, ?, ?)",
+      "INSERT INTO recuperaciontoken (id_usuario, token, valido_hasta) VALUES (?, ?, ?)",
       [usuario.id_usuario, token, validoHasta]
     );
 
@@ -74,7 +74,7 @@ export const procesarVerificarToken = async (req, res) => {
 
   try {
     const [[usuario]] = await pool.query(
-      "SELECT id_usuario FROM Usuario WHERE correo = ?",
+      "SELECT id_usuario FROM usuario WHERE correo = ?",
       [correo]
     );
 
@@ -89,7 +89,7 @@ export const procesarVerificarToken = async (req, res) => {
 
     // Último token emitido para ese usuario con ese código
     const [[registro]] = await pool.query(
-      "SELECT * FROM RecuperacionToken WHERE id_usuario = ? AND token = ? ORDER BY fecha_generado DESC LIMIT 1",
+      "SELECT * FROM recuperaciontoken WHERE id_usuario = ? AND token = ? ORDER BY fecha_generado DESC LIMIT 1",
       [usuario.id_usuario, token]
     );
 

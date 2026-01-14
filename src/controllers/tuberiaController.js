@@ -106,7 +106,7 @@ export const editarTuberia = async (req, res) => {
     const id = id_tuberia;
 
     // Obtener datos actuales para registrar SOLO lo modificado
-    const [actual] = await pool.query("SELECT * FROM Tuberia WHERE id_tuberia = ?", [id]);
+    const [actual] = await pool.query("SELECT * FROM tuberia WHERE id_tuberia = ?", [id]);
 
     await pool.query("CALL sp_tuberia_actualizar(?,?,?,?,?)", [
       id,
@@ -151,7 +151,7 @@ export const eliminarTuberia = async (req, res) => {
 
     // Obtener datos del material ANTES de inactivarlo
     const [rows] = await pool.query(
-      "SELECT diametro FROM Tuberia WHERE id_tuberia = ?",
+      "SELECT diametro FROM tuberia WHERE id_tuberia = ?",
       [id_tuberia]
     );
 

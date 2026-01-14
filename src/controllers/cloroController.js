@@ -83,7 +83,7 @@ export const crearCloro = async (req, res) => {
     //VALIDAR DUPLICADO (MISMO PATRÓN QUE ACCESORIOS)
     const [dup] = await pool.query(
       `SELECT id_cloro 
-       FROM Cloro 
+       FROM cloro 
        WHERE descripcion = ? 
          AND especificacion = ?
          AND estado <> 'Inactivo'
@@ -97,14 +97,14 @@ export const crearCloro = async (req, res) => {
 
     //INSERTAR
     await pool.query(
-      `INSERT INTO Cloro (descripcion, especificacion, cantidad, estado)
+      `INSERT INTO cloro (descripcion, especificacion, cantidad, estado)
        VALUES (?, ?, ?, 'Activo')`,
       [desc, espec, cantInt]
     );
 
     // BITÁCORA
     const especTexto = espec ? `, Especificación ${espec}` : "";
-    const cantIntTexto = espec ? `, Cantidad ${cantInt}` : "";
+    const cantIntTexto = cantInt ? `, Cantidad ${cantInt}` : "";
 
 
     await registrarBitacora(
@@ -138,7 +138,7 @@ export const editarCloro = async (req, res) => {
 
     const [[actual]] = await pool.query(
       `SELECT descripcion, especificacion, cantidad
-       FROM Cloro
+       FROM cloro
        WHERE id_cloro = ?
        LIMIT 1`,
       [id_cloro]
@@ -147,7 +147,7 @@ export const editarCloro = async (req, res) => {
     if (!actual) return res.redirect("/cloro?error=1");
 
     await pool.query(
-      `UPDATE Cloro SET descripcion=?, especificacion=?, cantidad=? WHERE id_cloro=?`,
+      `UPDATE cloro SET descripcion=?, especificacion=?, cantidad=? WHERE id_cloro=?`,
       [
         descripcion.trim(),
         (especificacion || "").trim(),
@@ -199,13 +199,13 @@ export const eliminarCloro = async (req, res) => {
     const { id_cloro } = req.body;
 
     const [[row]] = await pool.query(
-      `SELECT descripcion, especificacion FROM Cloro WHERE id_cloro=? LIMIT 1`,
+      `SELECT descripcion, especificacion FROM cloro WHERE id_cloro=? LIMIT 1`,
       [id_cloro]
     );
 
     if (!row) return res.redirect("/cloro?error=1");
 
-    await pool.query(`UPDATE Cloro SET estado='Inactivo' WHERE id_cloro=?`, [
+    await pool.query(`UPDATE cloro SET estado='Inactivo' WHERE id_cloro=?`, [
       id_cloro
     ]);
 

@@ -85,7 +85,7 @@ export const crearMedidor = async (req, res) => {
     // Validar duplicado
     const [dup] = await pool.query(
       `SELECT id_medidor
-       FROM Medidores
+       FROM medidores
        WHERE descripcion = ?
          AND especificacion = ?
          AND estado <> 'Inactivo'
@@ -99,7 +99,7 @@ export const crearMedidor = async (req, res) => {
 
     // Insertar
     await pool.query(
-      `INSERT INTO Medidores (descripcion, especificacion, cantidad, estado)
+      `INSERT INTO medidores (descripcion, especificacion, cantidad, estado)
        VALUES (?, ?, ?, 'Activo')`,
       [desc, espec, cantInt]
     );
@@ -139,7 +139,7 @@ export const editarMedidor = async (req, res) => {
 
     const [[actual]] = await pool.query(
       `SELECT descripcion, especificacion, cantidad
-       FROM Medidores
+       FROM medidores
        WHERE id_medidor = ?
        LIMIT 1`,
       [id_medidor]
@@ -148,7 +148,7 @@ export const editarMedidor = async (req, res) => {
     if (!actual) return res.redirect("/medidores?error=1");
 
     await pool.query(
-      `UPDATE Medidores
+      `UPDATE medidores
        SET descripcion = ?, especificacion = ?, cantidad = ?
        WHERE id_medidor = ?`,
       [descripcion.trim(), (especificacion || "").trim(), cantNueva, id_medidor]
@@ -194,7 +194,7 @@ export const eliminarMedidor = async (req, res) => {
 
     const [[row]] = await pool.query(
       `SELECT descripcion
-       FROM Medidores
+       FROM medidores
        WHERE id_medidor = ?
        LIMIT 1`,
       [id_medidor]
@@ -203,7 +203,7 @@ export const eliminarMedidor = async (req, res) => {
     if (!row) return res.redirect("/medidores?error=1");
 
     await pool.query(
-      `UPDATE Medidores
+      `UPDATE medidores
        SET estado = 'Inactivo'
        WHERE id_medidor = ?`,
       [id_medidor]

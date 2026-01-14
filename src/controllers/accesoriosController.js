@@ -91,7 +91,7 @@ export const crearAccesorio = async (req, res) => {
 
     // Validar duplicado
     const [dup] = await pool.query(
-      `SELECT id_accesorio FROM Accesorios 
+      `SELECT id_accesorio FROM accesorios 
        WHERE descripcion = ? AND tipo = ? AND diametro = ? AND especificacion = ? 
        AND estado <> 'Inactivo' LIMIT 1`,
       [descripcion, tipo, diametro, especificacion]
@@ -103,7 +103,7 @@ export const crearAccesorio = async (req, res) => {
 
     // Insertar
     await pool.query(
-      `INSERT INTO Accesorios (descripcion, tipo, diametro, especificacion, cantidad)
+      `INSERT INTO accesorios (descripcion, tipo, diametro, especificacion, cantidad)
        VALUES (?, ?, ?, ?, ?)`,
       [descripcion, tipo, diametro, especificacion, cantidad]
     );
@@ -149,7 +149,7 @@ export const editarAccesorio = async (req, res) => {
 
     // Obtener valores actuales
     const [[actual]] = await pool.query(
-      "SELECT descripcion, tipo, diametro, especificacion, cantidad FROM Accesorios WHERE id_accesorio = ?",
+      "SELECT descripcion, tipo, diametro, especificacion, cantidad FROM accesorios WHERE id_accesorio = ?",
       [id_accesorio]
     );
 
@@ -157,7 +157,7 @@ export const editarAccesorio = async (req, res) => {
 
     // Actualizar
     await pool.query(
-      `UPDATE Accesorios 
+      `UPDATE accesorios 
        SET descripcion = ?, tipo = ?, diametro = ?, especificacion = ?, cantidad = ?
        WHERE id_accesorio = ?`,
       [descripcion, tipo, diametro, especificacion, cantidad, id_accesorio]
