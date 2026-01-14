@@ -14,7 +14,7 @@ export const mostrarCambioClave = (req, res) => {
 export const procesarCambioClave = async (req, res) => {
   const { nueva_contrasena, confirmar_contrasena } = req.body;
 
-  // ✅ Obtener ID desde sesión normal o desde recuperación
+  // Obtener ID desde sesión normal o desde recuperación
   const id_usuario = req.session.usuario?.id_usuario || req.session.resetUserId;
 
   // Si no hay sesión ni token, redirige al inicio
@@ -68,10 +68,10 @@ export const procesarCambioClave = async (req, res) => {
     // === Redirigir según contexto ===
     if (req.session.resetUserId) {
       delete req.session.resetUserId;
-      return res.redirect("/"); // ✅ Vuelve al login si viene del flujo de recuperación
+      return res.redirect("/"); // Vuelve al login si viene del flujo de recuperación
     }
 
-    return res.redirect("/dashboard"); // ✅ Caso normal: rol Admin o User
+    return res.redirect("/dashboard"); // Caso normal: rol Admin o User
   } catch (err) {
     console.error("Error al cambiar contraseña:", err.message);
     res.render("auth/changePassword", {
