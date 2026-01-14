@@ -42,13 +42,7 @@ app.engine(".hbs", engine({
 }));
 
 app.set("view engine", ".hbs");
-//app.set("views", path.join(__dirname, "views")); Primera linea
-//app.set("views", path.join(process.cwd(), "src", "views")); Segunda linea
-// Localiza la carpeta 'views' sin importar cuántos 'src' haya en el camino
-const viewsPath = path.join(__dirname, "views");
-
-app.set("views", viewsPath);
-console.log("RUTA FINAL DE VISTAS:", viewsPath); //final
+app.set("views", path.join(__dirname, "views")); //Se mantiene
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

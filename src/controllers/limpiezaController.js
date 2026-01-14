@@ -37,7 +37,7 @@ export const listarLimpieza = async (req, res) => {
       "El usuario consultó el listado de limpieza."
     );
 
-    res.render("limpieza/index", {
+    res.render("Limpieza/index", { //corregir letra
       layout: "app",
       title: "Limpieza",
       usuario,
