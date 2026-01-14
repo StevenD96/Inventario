@@ -52,7 +52,7 @@ export const listarUsuarios = async (req, res) => {
     );
 
     // Render
-    res.render("users/index", {
+    res.render("Users/index", { //cambio letra mayuscula
       layout: "app",
       title: "Usuarios",
       usuario: req.session.usuario,
