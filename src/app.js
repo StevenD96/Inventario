@@ -42,8 +42,16 @@ app.engine(".hbs", engine({
 }));
 
 app.set("view engine", ".hbs");
-//app.set("views", path.join(__dirname, "views"));
-app.set("views", path.join(process.cwd(), "src", "views"));
+//app.set("views", path.join(__dirname, "views")); Primera linea
+//app.set("views", path.join(process.cwd(), "src", "views")); Segunda linea
+// Reemplaza la línea de app.set("views"...) por este bloque:
+const viewsPath = __dirname.includes("src") 
+    ? path.join(__dirname, "views") 
+    : path.join(__dirname, "src", "views");
+
+app.set("views", viewsPath);
+console.log("Ruta de vistas configurada en:", viewsPath); // Esto nos ayudará a ver la ruta real en los logs
+//Fin bloque//
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
