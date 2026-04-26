@@ -41,6 +41,9 @@
   "express-handlebars": "^8.0.2",
   
     
+  "express-mysql-session": "^3.0.3",
+  
+    
   "express-session": "^1.18.2",
   
     

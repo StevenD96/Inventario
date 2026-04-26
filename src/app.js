@@ -5,6 +5,7 @@ import path from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import session from "express-session";
+import MySQLStoreFactory from "express-mysql-session";
 
 // Rutas (Mantenemos tus rutas tal cual)
 import authRoutes from "./routes/authRoutes.js";
@@ -50,12 +51,25 @@ app.use(express.json());
 // --- AJUSTE PARA RENDER (TRUST PROXY) ---
 // Render usa un proxy inverso. Esto asegura que las cookies de sesión funcionen bien.
 app.set('trust proxy', 1);
+// Crear el store de sesiones usando la misma base de datos Aiven
+// --- SESION PERSISTENTE EN MYSQL (AIVEN) ---
+const MySQLStore = MySQLStoreFactory(session);
 
+const sessionStore = new MySQLStore({
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT, 10),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : undefined,
+  createDatabaseTable: true // Crea la tabla 'sessions' automaticamente en Aiven
+});
 // Sesión
 app.use(session({
   secret: process.env.SESSION_SECRET || "inventarioCMD2025",
   resave: false,
   saveUninitialized: false,
+  store: sessionStore, // Sesiones persistentes en MySQL
   cookie: { 
     maxAge: 1000 * 60 * 60, // Aumentado a 1 hora para mejor experiencia
     secure: process.env.NODE_ENV === "production" // Solo envía cookies sobre HTTPS en producción
