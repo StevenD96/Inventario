@@ -66,7 +66,9 @@ const sessionStore = new MySQLStore({
 });
 // Sesión
 app.use(session({
-  secret: process.env.SESSION_SECRET || "inventarioCMD2025",
+  //secret: process.env.SESSION_SECRET || "inventarioCMD2025",
+  secret: process.env.SESSION_SECRET,
+
   resave: false,
   saveUninitialized: false,
   store: sessionStore, // Sesiones persistentes en MySQL
