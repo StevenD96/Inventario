@@ -2,8 +2,8 @@
 import pool from "../models/db.js";
 import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
-
-
+// Agrego este import al inicio de bitacoraController.js
+import { formatearFechaCostaRica } from "../utils/fechas.js";
 
 const PAGE_SIZE = 10;
 
@@ -42,6 +42,11 @@ export const listarBitacora = async (req, res) => {
     // Por el orden del SP: primero viene el total, luego los registros
     const total = result[0][0]?.total || 0; // primer SELECT
     const registros = result[1] || []; // segundo SELECT
+    // Convertir fechas a zona horaria de Costa Rica antes de enviar a la vista
+    const registrosFormateados = registros.map(r => ({
+      ...r,
+      fecha: formatearFechaCostaRica(r.fecha)
+    }));
 
     const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
     const pages = Array.from({ length: totalPages }, (_, i) => ({
@@ -101,7 +106,7 @@ export const listarBitacora = async (req, res) => {
       rolUsuario: usuarioSesion.rol,
 
       // Datos para la vista
-      registros,
+      registros: registrosFormateados,
       usuarios: usuariosRows,
       meses,
       anios,
@@ -158,6 +163,7 @@ export const exportarBitacoraExcel = async (req, res) => {
     );
 
     const registros = result[1] || [];
+    
 
     // Crear workbook de Excel
     const workbook = new ExcelJS.Workbook();
@@ -172,8 +178,14 @@ export const exportarBitacoraExcel = async (req, res) => {
       { header: "Descripción", key: "descripcion", width: 60 },
     ];
 
+    // Conversion de fechas a zona horaria de Costa Rica
+    const registrosFormateados = registros.map(r => ({
+      ...r,
+      fecha: formatearFechaCostaRica(r.fecha)
+    }))
+
     // Filas
-    registros.forEach((row) => {
+    registrosFormateados.forEach((row) => {
       worksheet.addRow({
         fecha: row.fecha,
         usuario: row.usuario,
@@ -282,8 +294,16 @@ export const exportarBitacoraPdf = async (req, res) => {
     doc.moveTo(30, doc.y).lineTo(800, doc.y).stroke();
     doc.moveDown(0.5);
 
+
+
+    // Conversion de fechas a zona horaria de Costa Rica
+    const registrosFormateados = registros.map(r => ({
+      ...r,
+      fecha: formatearFechaCostaRica(r.fecha)
+    }));
+
     // Filas
-    registros.forEach((row) => {
+    registrosFormateados.forEach((row) => {
       // Si estamos muy abajo en la página, agregar nueva página
       if (doc.y > 520) {
         doc.addPage();
