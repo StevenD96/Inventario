@@ -66,9 +66,7 @@ const sessionStore = new MySQLStore({
 });
 // Sesión
 app.use(session({
-  //secret: process.env.SESSION_SECRET || "inventarioCMD2025",
   secret: process.env.SESSION_SECRET,
-
   resave: false,
   saveUninitialized: false,
   store: sessionStore, // Sesiones persistentes en MySQL
@@ -77,6 +75,16 @@ app.use(session({
     secure: process.env.NODE_ENV === "production" // Solo envía cookies sobre HTTPS en producción
   }
 }));
+
+// Temporizador de inactividad
+// Renueva la sesion en cada request si el usuario esta autenticado
+// El contador de 1 hora se reinicia con cada accion del usuario
+app.use((req, res, next) => {
+  if (req.session?.usuario) {
+    req.session.touch();
+  }
+  next();
+});
 
 // Archivos estáticos
 app.use(express.static(path.join(__dirname, "../public")));
